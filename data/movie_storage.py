@@ -2,6 +2,9 @@ import os
 import json
 
 
+FILENAME = os.path.join("data", "data.json")
+
+
 def get_movies_from_db() -> list:
     """
     Loads the information from the JSON file and returns the data.
@@ -18,8 +21,7 @@ def get_movies_from_db() -> list:
         "..."
     ]
     """
-    filename = os.path.join("data", "data.json")
-    with open(filename, "r", encoding="utf-8") as handle:
+    with open(FILENAME, "r", encoding="utf-8") as handle:
         movies = json.load(handle)
 
         return movies
@@ -31,8 +33,7 @@ def save_movies_to_db(movies: list) -> None:
     :param movies: list of dictionaries that contains the movies database.
     :return: None
     """
-    filename = os.path.join("data", "data.json")
-    with open(filename, "w", encoding="utf-8") as handle:
+    with open(FILENAME, "w", encoding="utf-8") as handle:
             json.dump(movies, handle, ensure_ascii=False, indent=4)
 
 

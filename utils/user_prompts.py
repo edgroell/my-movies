@@ -13,7 +13,7 @@ def prompt_menu_choice() -> int:
     """
     while True:
         print(f"\n***************************************")
-        menu_choice = input(prompt(f"Enter choice (0-11): "))
+        menu_choice = input(prompt(f"Enter choice (0-11): ")).strip()
         print(f"***************************************\n")
         if menu_choice.isdigit() and 0 <= int(menu_choice) <= 11:
 
@@ -28,7 +28,7 @@ def prompt_press_enter() -> None:
     :return: None
     """
     print(f"\n***************************************")
-    input(prompt(f"Press enter to continue "))
+    input(prompt(f"Press Enter to continue... "))
     print(f"***************************************\n")
 
 
@@ -162,20 +162,24 @@ def prompt_max_year() -> int:
         max_year: int containing the maximum year of release given by the user.
     """
     while True:
-        max_year = input(prompt("Enter end year (leave blank for no end year): ")).strip()
-        if not max_year:
+        try:
+            max_year = input(prompt("Enter end year (leave blank for no end year): ")).strip()
             current_year = datetime.now().year
+            if not max_year:
 
-            return current_year
+                return current_year
 
-        if (max_year.isdigit() and
-                len(max_year) == 4 and
-                (max_year.startswith("1") or
-                 max_year.startswith("2"))):
+            if (int(max_year) <= current_year and
+                    len(max_year) == 4 and
+                    (max_year.startswith("1") or
+                     max_year.startswith("2"))):
 
-            return int(max_year)
+                return int(max_year)
 
-        print(error("\nPlease enter a valid year!\n"))
+            print(error("\nPlease enter a valid year, not in the future!\n"))
+
+        except ValueError:
+            print(error("\nPlease enter a year!\n"))
 
 
 __all__ = [

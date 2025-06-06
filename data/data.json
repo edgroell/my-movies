@@ -2,7 +2,7 @@
     {
         "title": "The Shawshank Redemption",
         "details": {
-            "rating": 9.5,
+            "rating": 2.2,
             "year": 2014
         }
     },
@@ -70,10 +70,24 @@
         }
     },
     {
-        "title": "Moana",
+        "title": "A Beautiful Mind",
+        "details": {
+            "rating": 10.0,
+            "year": 2001
+        }
+    },
+    {
+        "title": "Moana 2",
         "details": {
             "rating": 10.0,
             "year": 2025
+        }
+    },
+    {
+        "title": "Moana",
+        "details": {
+            "rating": 10.0,
+            "year": 2018
         }
     }
 ]
