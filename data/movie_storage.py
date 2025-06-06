@@ -1,6 +1,6 @@
 import os
 import json
-# TODO PEP 8
+
 
 def get_movies_from_db() -> list:
     """
@@ -25,50 +25,62 @@ def get_movies_from_db() -> list:
         return movies
 
 
-def save_movies_to_db(movies: list):
+def save_movies_to_db(movies: list) -> None:
     """
-    Gets all your movies as an argument and saves them to the JSON file.
+    Gets all the movies as an argument and saves them to the JSON file.
+    :param movies: list of dictionaries that contains the movies database.
+    :return: None
     """
-    try:
-        with open("data.json", "w", encoding="utf-8") as handle:
-            json.dump(movies, handle, ensure_ascii=False, indent=4)
-        return True
-    except FileNotFoundError:
-        return False
+    with open("data.json", "w", encoding="utf-8") as handle:
+        json.dump(movies, handle, ensure_ascii=False, indent=4)
 
 
-def add_movie_to_db(movie_name, movie_rating, movie_year):
+def add_movie_to_db(movie_name: str, movie_rating: float, movie_year: int) -> None:
     """
-    Adds a movie to the database.
-    Loads the information from the JSON file, add the movie,
-    and saves it. The function doesn't need to validate the input.
+    Adds a movie to the database by:
+    (1) loading the JSON file
+    (2) updating the database
+    (3) saving the movies to the database (aka JSON file)..
+    :param movie_name: str containing the name of the movie.
+    :param movie_rating: float containing the rating of the movie.
+    :param movie_year: int containing the year of release of the movie.
+    :return: None
     """
     movies = get_movies_from_db()
     movies.append({"title": movie_name, "details": {"rating": movie_rating, "year": movie_year}})
     save_movies_to_db(movies)
 
 
-def delete_movie_from_db(movie_name):
+def delete_movie_from_db(movie_name: str) -> None:
     """
-    Deletes a movie from the database.
-    Loads the information from the JSON file, deletes the movie,
-    and saves it. The function doesn't need to validate the input.
+    Deletes a movie from the database by:
+    (1) loading the JSON file
+    (2) updating the database
+    (3) saving the movies to the database (aka JSON file).
+    :param movie_name: str containing the name of the movie.
+    :return: None
     """
     movies = get_movies_from_db()
     for movie in movies:
         if movie["title"].lower() == movie_name.lower():
             movies.remove(movie)
+
     save_movies_to_db(movies)
 
 
-def update_movie_from_db(movie_name, movie_rating):
+def update_movie_from_db(movie_name: str, movie_rating: float) -> None:
     """
-    Updates a movie from the database.
-    Loads the information from the JSON file, updates the movie,
-    and saves it. The function doesn't need to validate the input.
+    Updates a movie from the database by:
+    (1) loading the JSON file
+    (2) updating the rating of the given movie
+    (3) saving the movies to the database (aka JSON file).
+    :param movie_name: str containing the name of the movie.
+    :param movie_rating: float containing the rating of the given movie.
+    :return: None
     """
     movies = get_movies_from_db()
     for movie in movies:
         if movie["title"].lower() == movie_name.lower():
             movie["details"]["rating"] = movie_rating
+
     save_movies_to_db(movies)
