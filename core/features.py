@@ -1,3 +1,8 @@
+"""
+Module that contains all the commands functions from the CLI.
+"""
+
+
 import os
 import random
 import matplotlib.pyplot as plt
@@ -50,7 +55,7 @@ def add_movie(movies: list) -> None:
     :param movies: list of movies (aka database).
     :return: None
     """
-    print(title(f"Add Movie") + ":")
+    print(title("Add Movie") + ":")
     movie_name = prompt_movie_name()
     if is_already_in_database(movies, movie_name):
         print(error(f"\nSorry, the movie '{movie_name}' is already in the database!"))
@@ -69,7 +74,7 @@ def delete_movie(movies: list) -> None:
     :param movies: list of movies (aka database).
     :return: None
     """
-    print(title(f"Delete Movie") + ":")
+    print(title("Delete Movie") + ":")
     movie_name = prompt_movie_name()
     if not is_already_in_database(movies, movie_name):
         print(error(f"\nSorry, the movie '{movie_name}' is not in the database!"))
@@ -86,7 +91,7 @@ def update_movie(movies: list) -> None:
     :param movies: list of movies (aka database).
     :return: None
     """
-    print(title(f"Update Movie") + ":")
+    print(title("Update Movie") + ":")
     movie_name = prompt_movie_name()
     if not is_already_in_database(movies, movie_name):
         print(error(f"\nSorry, the movie '{movie_name}' is not in the database!"))
@@ -104,7 +109,7 @@ def list_stats(movies: list) -> None:
     :param movies: list of movies (aka database).
     :return: None
     """
-    print(title(f"KPIs") + ":")
+    print(title("KPIs") + ":")
     print("Average rating: ", get_average_rating(movies))
     print("Median rating: ", get_median_rating(movies))
     print("Best movie(s): ", end="")
@@ -125,7 +130,7 @@ def get_random_movie(movies: list) -> None:
     :return: None
     """
     random_movie = random.choice(movies)
-    print(title(f"Your movie for tonight") + ": ")
+    print(title("Your movie for tonight") + ": ")
     print(f"{random_movie["title"]}, it's rated {random_movie["details"]["rating"]}")
 
 
@@ -135,7 +140,7 @@ def search_movie(movies: list) -> None:
     :param movies: list of movies (aka database).
     :return: None
     """
-    print(title(f"Search Movie") + ":")
+    print(title("Search Movie") + ":")
     movie_name = prompt_movie_name()
     search_matching = {}
     for movie in movies:
@@ -162,8 +167,12 @@ def list_movies_sorted_by_rating(movies: list) -> None:
     :param movies: list of movies (aka database).
     :return: None
     """
-    movies_sorted_by_rating = sorted(movies, key=lambda item: item["details"]["rating"], reverse=True)
-    print(title(f"Movies Sorted by Rating") + ":")
+    movies_sorted_by_rating = sorted(
+        movies,
+        key=lambda item: (-item["details"]["rating"], item["title"]),
+        reverse=False
+    )
+    print(title("Movies Sorted by Rating") + ":")
     for movie in movies_sorted_by_rating:
         print(f">>> {movie["title"]}: {movie["details"]["rating"]}")
 
@@ -176,16 +185,26 @@ def list_movies_sorted_by_year(movies: list) -> None:
     :return: None
     """
     sorting_choice = prompt_sorting_descending()
-    movies_sorted_by_year_descending = sorted(movies, key=lambda item: item["details"]["year"], reverse=True)
-    movies_sorted_by_year_ascending = sorted(movies, key=lambda item: item["details"]["year"], reverse=False)
-    print(title(f"\nMovies Sorted by Year") + ":")
+    movies_sorted_by_year_descending = sorted(
+        movies,
+        key=lambda item: (-item["details"]["year"], item["title"]),
+        reverse=False
+    )
+    movies_sorted_by_year_ascending = sorted(
+        movies,
+        key=lambda item: (item["details"]["year"], item["title"]),
+        reverse=False
+    )
+    print(title("\nMovies Sorted by Year") + ":")
     if sorting_choice:
         for movie in movies_sorted_by_year_descending:
-            print(f">>> {movie["title"]} ({movie["details"]["year"]}): {movie["details"]["rating"]}")
+            print(f">>> {movie["title"]} ({movie["details"]["year"]}): "
+                  f"{movie["details"]["rating"]}")
 
     else:
         for movie in movies_sorted_by_year_ascending:
-            print(f">>> {movie["title"]} ({movie["details"]["year"]}): {movie["details"]["rating"]}")
+            print(f">>> {movie["title"]} ({movie["details"]["year"]}): "
+                  f"{movie["details"]["rating"]}")
 
 
 def filter_movies(movies: list) -> None:
@@ -194,14 +213,16 @@ def filter_movies(movies: list) -> None:
     :param movies: list of movies (aka database).
     :return: None
     """
-    print(title(f"Filter Movies") + ":")
+    print(title("Filter Movies") + ":")
     min_rating = prompt_min_rating()
     min_year = prompt_min_year()
     max_year = prompt_max_year()
-    print(title(f"\nFiltered Movies") + ":")
+    print(title("\nFiltered Movies") + ":")
     for movie in movies:
-        if movie["details"]["rating"] >= min_rating and min_year <= movie["details"]["year"] <= max_year:
-            print(f">>> {movie['title']} ({movie["details"]['year']}): {movie['details']['rating']}")
+        if (movie["details"]["rating"] >= min_rating and
+                min_year <= movie["details"]["year"] <= max_year):
+            print(f">>> {movie['title']} ({movie["details"]['year']}): "
+                  f"{movie['details']['rating']}")
 
 
 def create_ratings_histogram(movies: list) -> None:
@@ -221,5 +242,5 @@ def create_ratings_histogram(movies: list) -> None:
     file_path = os.path.join("output", "ratings_histogram.png")
     plt.savefig(file_path)
     plt.show()
-    print(success(f"Movies' Ratings Histogram saved to ..."))
+    print(success("Movies Ratings Histogram saved to ..."))
     print(success(f"  'current directory + {file_path}'"))

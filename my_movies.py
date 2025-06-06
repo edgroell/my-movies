@@ -1,4 +1,10 @@
-from utils.text_formatter import TextFormatter
+"""
+# My Movies
+# by Ed Groell
+# last update: 07-JUN-2025
+"""
+
+
 from data.movie_storage import get_movies_from_db
 from core.features import (
     list_movies,
@@ -13,6 +19,7 @@ from core.features import (
     filter_movies,
     create_ratings_histogram
 )
+from utils.text_formatter import TextFormatter
 from utils.user_prompts import (
     prompt_menu_choice,
     prompt_press_enter
@@ -29,15 +36,15 @@ def display_header() -> None:
     Prints the main header of the app.
     :return: None
     """
-    print(f"\n***************************************")
-    print(f"************   ", end="")
-    print(success(f"My Movies"), end="")
-    print(f"   ************")
-    print(f"***************************************\n")
+    print("\n***************************************")
+    print("************   ", end="")
+    print(success("My Movies"), end="")
+    print("   ************")
+    print("***************************************\n")
 
 
 def dispatch_menu() -> None:
-
+    """ Coordinates the different commands available from the CLI """
     menu = {
         0: ("0. Exit", None),
         1: ("1. List Movies", list_movies),
@@ -54,7 +61,7 @@ def dispatch_menu() -> None:
     }
 
     while True:
-        print(title(f"Menu") + ":")
+        print(title("Menu") + ":")
         for command in menu.values():
             print(command[0])
 
@@ -74,6 +81,7 @@ def dispatch_menu() -> None:
 
 
 def main():
+    """ Initiates the my-movies program """
     display_header()
     # Displays and handles the CLI interface
     dispatch_menu()

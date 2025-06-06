@@ -1,3 +1,8 @@
+"""
+Module containing all the functions that interact with the JSON file.
+"""
+
+
 import os
 import json
 
@@ -34,7 +39,7 @@ def save_movies_to_db(movies: list) -> None:
     :return: None
     """
     with open(FILENAME, "w", encoding="utf-8") as handle:
-            json.dump(movies, handle, ensure_ascii=False, indent=4)
+        json.dump(movies, handle, ensure_ascii=False, indent=4)
 
 
 def add_movie_to_db(movie_name: str, movie_rating: float, movie_year: int) -> None:

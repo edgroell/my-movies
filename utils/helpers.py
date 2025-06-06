@@ -1,3 +1,8 @@
+"""
+Module that contains all the helper functions.
+"""
+
+
 import statistics
 import Levenshtein
 

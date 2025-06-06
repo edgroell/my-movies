@@ -1,4 +1,9 @@
-# Dictionary containing formatting options for text styling in the terminal.
+"""
+Module that contains all the text styling elements.
+"""
+
+
+# Dictionary containing formatting options for text styling.
 formatting = {
     "bold": "\033[1m",
     "underline": "\033[4m",
@@ -11,6 +16,7 @@ formatting = {
 
 
 class TextFormatter:
+    """ Class containing all functions to style the text from the CLI """
     @staticmethod
     def title(message):
         """ Format the message as a title with underline and bold styling. """
@@ -18,7 +24,7 @@ class TextFormatter:
 
     @staticmethod
     def prompt(message):
-        """ Format the message as a prompt (i.e., interaction with the user) with blue and bold styling. """
+        """ Format the message as a prompt with blue and bold styling. """
         return f"{formatting['blue']}{formatting['bold']}{message}{formatting['reset']}"
 
     @staticmethod

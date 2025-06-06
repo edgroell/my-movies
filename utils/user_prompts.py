@@ -1,3 +1,8 @@
+"""
+Module that consolidates all the user_prompts functions
+"""
+
+
 from datetime import datetime
 from utils.text_formatter import TextFormatter
 
@@ -12,14 +17,14 @@ def prompt_menu_choice() -> int:
     :return: menu_choice: int containing the command to forward to.
     """
     while True:
-        print(f"\n***************************************")
-        menu_choice = input(prompt(f"Enter choice (0-11): ")).strip()
-        print(f"***************************************\n")
+        print("\n***************************************")
+        menu_choice = input(prompt("Enter choice (0-11): ")).strip()
+        print("***************************************\n")
         if menu_choice.isdigit() and 0 <= int(menu_choice) <= 11:
 
             return int(menu_choice)
 
-        print(error(f"Please enter a number between 0 and 11!"))
+        print(error("Please enter a number between 0 and 11!"))
 
 
 def prompt_press_enter() -> None:
@@ -27,9 +32,9 @@ def prompt_press_enter() -> None:
     Prompts the user to press enter before continuing.
     :return: None
     """
-    print(f"\n***************************************")
-    input(prompt(f"Press Enter to continue... "))
-    print(f"***************************************\n")
+    print("\n***************************************")
+    input(prompt("Press Enter to continue... "))
+    print("***************************************\n")
 
 
 def prompt_movie_name() -> str:
@@ -43,7 +48,7 @@ def prompt_movie_name() -> str:
 
             return movie_name
 
-        print(error(f"\nPlease enter a movie name!\n"))
+        print(error("\nPlease enter a movie name!\n"))
 
 
 def prompt_movie_rating() -> float:
@@ -91,7 +96,8 @@ def prompt_sorting_descending() -> bool:
         False otherwise.
     """
     while True:
-        sorting_choice = input(prompt("Do you want the latest movies first? (y/n) ")).strip().lower()
+        sorting_choice = input(prompt(
+            "Do you want the latest movies first? (y/n) ")).strip().lower()
         if sorting_choice == "y":
 
             return True
@@ -100,7 +106,7 @@ def prompt_sorting_descending() -> bool:
 
             return False
 
-        print(error(f"\nPlease enter a valid answer (y/n)!\n"))
+        print(error("\nPlease enter a valid answer (y/n)!\n"))
 
 
 def prompt_min_rating() -> int | float:
@@ -125,7 +131,7 @@ def prompt_min_rating() -> int | float:
 
                 return min_rating_float
 
-            print(error(f"\nPlease enter a valid number between 0 and 10!\n"))
+            print(error("\nPlease enter a valid number between 0 and 10!\n"))
 
         except ValueError:
             print(error("\nPlease enter a valid rating!\n"))
