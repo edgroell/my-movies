@@ -18,7 +18,7 @@ def get_movies_from_db() -> list:
         "..."
     ]
     """
-    filename = os.path.join(os.getcwd(), "data", "data.json")
+    filename = os.path.join("data", "data.json")
     with open(filename, "r", encoding="utf-8") as handle:
         movies = json.load(handle)
 
@@ -31,8 +31,9 @@ def save_movies_to_db(movies: list) -> None:
     :param movies: list of dictionaries that contains the movies database.
     :return: None
     """
-    with open("data.json", "w", encoding="utf-8") as handle:
-        json.dump(movies, handle, ensure_ascii=False, indent=4)
+    filename = os.path.join("data", "data.json")
+    with open(filename, "w", encoding="utf-8") as handle:
+            json.dump(movies, handle, ensure_ascii=False, indent=4)
 
 
 def add_movie_to_db(movie_name: str, movie_rating: float, movie_year: int) -> None:

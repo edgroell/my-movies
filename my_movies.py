@@ -18,6 +18,7 @@ from utils.user_prompts import (
     prompt_press_enter
 )
 
+
 title = TextFormatter.title
 success = TextFormatter.success
 error = TextFormatter.error

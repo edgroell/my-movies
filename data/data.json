@@ -68,5 +68,12 @@
             "rating": 8.7,
             "year": 2012
         }
+    },
+    {
+        "title": "Moana",
+        "details": {
+            "rating": 10.0,
+            "year": 2025
+        }
     }
 ]
