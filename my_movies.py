@@ -1,4 +1,5 @@
 from utils.text_formatter import TextFormatter
+from data.movie_storage import get_movies_from_db
 from core.features import (
     list_movies,
     add_movie,
@@ -33,24 +34,7 @@ def display_header() -> None:
     print(f"***************************************\n")
 
 
-def load_data() -> list:
-    movies = [
-        {"The Shawshank Redemption": {"rating": 9.5, "year": 2014}},
-        {"Pulp Fiction": {"rating": 8.8, "year": 2008}},
-        {"The Room": {"rating": 3.6, "year": 2000}},
-        {"The Godfather": {"rating": 9.2, "year": 2012}},
-        {"The Godfather: Part II": {"rating": 9.0, "year": 2012}},
-        {"The Dark Knight": {"rating": 9.0, "year": 2012}},
-        {"12 Angry Men": {"rating": 8.9, "year": 2012}},
-        {"Everything Everywhere All At Once": {"rating": 8.9, "year": 2012}},
-        {"Forrest Gump": {"rating": 8.8, "year": 2012}},
-        {"Star Wars: Episode V": {"rating": 8.7, "year": 2012}}
-    ]
-
-    return movies # TODO change data structure
-
-
-def dispatch_menu(movies: list) -> None:
+def dispatch_menu() -> None:
 
     menu = {
         0: ("0. Exit", None),
@@ -79,6 +63,7 @@ def dispatch_menu(movies: list) -> None:
 
             break
 
+        movies = get_movies_from_db()
         command = menu.get(menu_choice)
         if command and command[1]:
             command[1](movies)
@@ -88,8 +73,8 @@ def dispatch_menu(movies: list) -> None:
 
 def main():
     display_header()
-    movies = load_data()
-    dispatch_menu(movies)
+    # Displays and handles the CLI interface
+    dispatch_menu()
 
 
 if __name__ == "__main__":

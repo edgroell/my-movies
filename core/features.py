@@ -18,6 +18,11 @@ from utils.user_prompts import (
     prompt_movie_year,
     prompt_sorting_descending
 )
+from data.movie_storage import (
+    add_movie_to_db,
+    delete_movie_from_db,
+    update_movie_from_db,
+)
 
 
 title = TextFormatter.title
@@ -33,9 +38,7 @@ def list_movies(movies: list) -> None:
     """
     print(title(f"{len(movies)} movies in total") + ":")
     for movie in movies:
-        movie_title = next(iter(movie))
-        movie_details = movie[movie_title]
-        print(f">>> {movie_title} ({movie_details['year']}): {movie_details['rating']}")
+        print(f">>> {movie["title"]} ({movie["details"]['year']}): {movie["details"]['rating']}")
 
 
 def add_movie(movies: list) -> None:
@@ -52,8 +55,7 @@ def add_movie(movies: list) -> None:
 
     movie_rating = prompt_movie_rating()
     movie_year = prompt_movie_year()
-    new_movie = {movie_name: {"rating": movie_rating, "year": movie_year}}
-    movies.append(new_movie)
+    add_movie_to_db(movie_name, movie_rating, movie_year)
     print(success(f"\nMovie {movie_name} successfully added"))
 
 
@@ -69,11 +71,8 @@ def delete_movie(movies: list) -> None:
 
         return
 
-    for movie in movies:
-        movie_title = next(iter(movie))
-        if movie_title.lower() == movie_name.lower():
-            movies.remove(movie)
-            print(success(f"\nMovie '{movie_name}' successfully deleted"))
+    delete_movie_from_db(movie_name)
+    print(success(f"\nMovie '{movie_name}' successfully deleted"))
 
 
 def update_movie(movies: list) -> None:
@@ -89,11 +88,7 @@ def update_movie(movies: list) -> None:
         return
 
     new_rating = prompt_movie_rating()
-    for movie in movies:
-        movie_title = next(iter(movie))
-        movie_details = movie[movie_title]
-        if movie_title.lower() == movie_name.lower():
-            movie_details["rating"] = new_rating
+    update_movie_from_db(movie_name, new_rating)
     print(success(f"\nRating of movie '{movie_name}' updated to {new_rating}"))
 
 
@@ -124,10 +119,8 @@ def get_random_movie(movies: list) -> None:
     :return: None
     """
     random_movie = random.choice(movies)
-    random_movie_title = next(iter(random_movie))
-    random_movie_details = random_movie[random_movie_title]
     print(title(f"Your movie for tonight") + ": ", end="")
-    print(f"{random_movie_title}, it's rated {random_movie_details["rating"]}")
+    print(f"{random_movie["title"]}, it's rated {random_movie["details"]["rating"]}")
 
 
 def search_movie(movies: list) -> None:
@@ -139,14 +132,12 @@ def search_movie(movies: list) -> None:
     movie_name = prompt_movie_name()
     search_matching = {}
     for movie in movies:
-        movie_title = next(iter(movie))
-        movie_details = movie[movie_title]
-        if movie_name.lower() in movie_title.lower():
-            search_matching[movie_title] = movie_details["rating"]
+        if movie_name.lower() in movie["title"].lower():
+            search_matching[movie["title"]] = movie["details"]["rating"]
         else:
-            distance = get_edit_distance(movie_title.lower(), movie_name.lower())
+            distance = get_edit_distance(movie["title"].lower(), movie_name.lower())
             if distance <= 4:
-                search_matching[movie_title] = movie_details["rating"]
+                search_matching[movie["title"]] = movie["details"]["rating"]
 
     if not search_matching:
         print(error(f"\nSorry, we can't find any match for '{movie_name}' in the database!"))
@@ -164,12 +155,10 @@ def list_movies_sorted_by_rating(movies: list) -> None:
     :param movies: list of movies (aka database).
     :return: None
     """
-    movies_sorted_by_rating = sorted(movies, key=lambda item: next(iter(item.values()))["rating"], reverse=True)
+    movies_sorted_by_rating = sorted(movies, key=lambda item: item["details"]["rating"], reverse=True)
     print(title(f"Movies sorted by rating") + ":")
     for movie in movies_sorted_by_rating:
-        movie_title = next(iter(movie))
-        movie_details = movie[movie_title]
-        print(f"{movie_title}: {movie_details["rating"]}")
+        print(f"{movie["title"]}: {movie["details"]["rating"]}")
 
 
 def list_movies_sorted_by_year(movies: list) -> None:
@@ -180,20 +169,16 @@ def list_movies_sorted_by_year(movies: list) -> None:
     :return: None
     """
     sorting_choice = prompt_sorting_descending()
-    movies_sorted_by_year_descending = sorted(movies, key=lambda item: next(iter(item.values()))["year"], reverse=True)
-    movies_sorted_by_year_ascending = sorted(movies, key=lambda item: next(iter(item.values()))["year"], reverse=False)
+    movies_sorted_by_year_descending = sorted(movies, key=lambda item: item["details"]["year"], reverse=True)
+    movies_sorted_by_year_ascending = sorted(movies, key=lambda item: item["details"]["year"], reverse=False)
     print(title(f"\nMovies sorted by rating") + ":")
     if sorting_choice:
         for movie in movies_sorted_by_year_descending:
-            movie_title = next(iter(movie))
-            movie_details = movie[movie_title]
-            print(f"{movie_title} ({movie_details["year"]}): {movie_details["rating"]}")
+            print(f"{movie["title"]} ({movie["details"]["year"]}): {movie["details"]["rating"]}")
 
     else:
         for movie in movies_sorted_by_year_ascending:
-            movie_title = next(iter(movie))
-            movie_details = movie[movie_title]
-            print(f"{movie_title} ({movie_details["year"]}): {movie_details["rating"]}")
+            print(f"{movie["title"]} ({movie["details"]["year"]}): {movie["details"]["rating"]}")
 
 
 def create_ratings_histogram(movies: list) -> None:

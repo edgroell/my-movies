@@ -1,0 +1,72 @@
+[
+    {
+        "title": "The Shawshank Redemption",
+        "details": {
+            "rating": 9.5,
+            "year": 2014
+        }
+    },
+    {
+        "title": "Pulp Fiction",
+        "details": {
+            "rating": 8.8,
+            "year": 2008
+        }
+    },
+    {
+        "title": "The Room",
+        "details": {
+            "rating": 3.6,
+            "year": 2000
+        }
+    },
+    {
+        "title": "The Godfather",
+        "details": {
+            "rating": 9.2,
+            "year": 2012
+        }
+    },
+    {
+        "title": "The Godfather: Part II",
+        "details": {
+            "rating": 9.0,
+            "year": 2012
+        }
+    },
+    {
+        "title": "The Dark Knight",
+        "details": {
+            "rating": 9.0,
+            "year": 2012
+        }
+    },
+    {
+        "title": "12 Angry Men",
+        "details": {
+            "rating": 8.9,
+            "year": 2012
+        }
+    },
+    {
+        "title": "Everything Everywhere All At Once",
+        "details": {
+            "rating": 8.9,
+            "year": 2012
+        }
+    },
+    {
+        "title": "Forrest Gump",
+        "details": {
+            "rating": 8.8,
+            "year": 2012
+        }
+    },
+    {
+        "title": "Star Wars: Episode V",
+        "details": {
+            "rating": 8.7,
+            "year": 2012
+        }
+    }
+]

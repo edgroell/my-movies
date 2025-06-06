@@ -12,9 +12,7 @@ def is_already_in_database(movies: list, movie_name: str) -> bool:
         False otherwise.
     """
     for movie in movies:
-        movie_title = next(iter(movie))
-        movie_details = movie[movie_title]
-        if movie_title.lower() == movie_name.lower().strip():
+        if movie["title"].lower() == movie_name.lower().strip():
 
             return True
 
@@ -29,9 +27,7 @@ def get_ratings_list(movies: list) -> list:
     """
     ratings_list = []
     for movie in movies:
-        movie_title = next(iter(movie))
-        movie_details = movie[movie_title]
-        ratings_list.append(movie_details["rating"])
+        ratings_list.append(movie["details"]["rating"])
 
     return ratings_list
 
@@ -69,10 +65,8 @@ def get_best_movie(movies: list) -> dict:
     ratings_list = get_ratings_list(movies)
     best_movies = {}
     for movie in movies:
-        movie_title = next(iter(movie))
-        movie_details = movie[movie_title]
-        if movie_details["rating"] == max(ratings_list):
-            best_movies[movie_title] = movie_details["rating"]
+        if movie["details"]["rating"] == max(ratings_list):
+            best_movies[movie["title"]] = movie["details"]["rating"]
 
     return best_movies
 
@@ -86,10 +80,8 @@ def get_worst_movie(movies: list) -> dict:
     ratings_list = get_ratings_list(movies)
     worst_movies = {}
     for movie in movies:
-        movie_title = next(iter(movie))
-        movie_details = movie[movie_title]
-        if movie_details["rating"] == min(ratings_list):
-            worst_movies[movie_title] = movie_details["rating"]
+        if movie["details"]["rating"] == min(ratings_list):
+            worst_movies[movie["title"]] = movie["details"]["rating"]
 
     return worst_movies
 
