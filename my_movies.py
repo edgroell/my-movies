@@ -35,19 +35,19 @@ def display_header() -> None:
 
 def load_data() -> list:
     movies = [
-        {'title': "The Shawshank Redemption", 'rating': 9.5, 'year': 2014},
-        {'title': "Pulp Fiction", 'rating': 8.8, 'year': 2008},
-        {'title': "The Room", 'rating': 3.6, 'year': 2000},
-        {'title': "The Godfather", 'rating': 9.2, 'year': 2012},
-        {'title': "The Godfather: Part II", 'rating': 9.0, 'year': 2012},
-        {'title': "The Dark Knight", 'rating': 9.0, 'year': 2012},
-        {'title': "12 Angry Men", 'rating': 8.9, 'year': 2012},
-        {'title': "Everything Everywhere All At Once", 'rating': 8.9, 'year': 2012},
-        {'title': "Forrest Gump", 'rating': 8.8, 'year': 2012},
-        {'title': "Star Wars: Episode V", 'rating': 8.7, 'year': 2012}
+        {"The Shawshank Redemption": {"rating": 9.5, "year": 2014}},
+        {"Pulp Fiction": {"rating": 8.8, "year": 2008}},
+        {"The Room": {"rating": 3.6, "year": 2000}},
+        {"The Godfather": {"rating": 9.2, "year": 2012}},
+        {"The Godfather: Part II": {"rating": 9.0, "year": 2012}},
+        {"The Dark Knight": {"rating": 9.0, "year": 2012}},
+        {"12 Angry Men": {"rating": 8.9, "year": 2012}},
+        {"Everything Everywhere All At Once": {"rating": 8.9, "year": 2012}},
+        {"Forrest Gump": {"rating": 8.8, "year": 2012}},
+        {"Star Wars: Episode V": {"rating": 8.7, "year": 2012}}
     ]
 
-    return movies
+    return movies # TODO change data structure
 
 
 def dispatch_menu(movies: list) -> None:

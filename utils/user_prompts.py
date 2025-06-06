@@ -98,24 +98,6 @@ def prompt_sorting_descending() -> bool:
         print(error(f"\nPlease enter a valid answer (y/n)!\n"))
 
 
-# def prompt_rating_update(movie_name: str) -> bool:
-#     """
-#     Prompts the user to decide whether they want to update the movie rating.
-#     :param movie_name: str containing the movie title to consider for the rating update.
-#     :return: bool:
-#         True if the user wants to update the movie rating.
-#         False otherwise.
-#     """
-#     while True:
-#         user_choice = input(prompt(f"Do you wish to update the rating of the movie {movie_name}? (y/n) ")).strip().lower()
-#         if user_choice == "y":
-#             return True
-#
-#         if user_choice == "n":
-#             return False
-#
-#         print(error("\nPlease enter a valid choice (y/n)\n"))
-
 __all__ = [
     "prompt_menu_choice",
     "prompt_press_enter",
