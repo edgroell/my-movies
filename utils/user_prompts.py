@@ -1,3 +1,4 @@
+from datetime import datetime
 from utils.text_formatter import TextFormatter
 
 
@@ -36,9 +37,13 @@ def prompt_movie_name() -> str:
     Prompts the user to enter a movie title.
     :return: movie_name: str containing the movie title given by the user.
     """
-    movie_name = input(prompt("Enter movie name: ")).strip()
+    while True:
+        movie_name = input(prompt("Enter movie name: ")).strip()
+        if movie_name:
 
-    return movie_name
+            return movie_name
+
+        print(error(f"\nPlease enter a movie name!\n"))
 
 
 def prompt_movie_rating() -> float:
@@ -75,7 +80,7 @@ def prompt_movie_year() -> int:
 
             return int(movie_year)
 
-        print(error("\nPlease enter a valid year.\n"))
+        print(error("\nPlease enter a valid year!\n"))
 
 
 def prompt_sorting_descending() -> bool:
@@ -98,6 +103,81 @@ def prompt_sorting_descending() -> bool:
         print(error(f"\nPlease enter a valid answer (y/n)!\n"))
 
 
+def prompt_min_rating() -> int | float:
+    """
+    Prompts the user to enter a minimum rating.
+    :return:
+        0: int indicating there is no minimum rating.
+        min_rating_float: float containing the minimum rating given by the user.
+    """
+    while True:
+        min_rating = input(prompt("Enter minimum rating (leave blank for no min rating): ")).strip()
+        if not min_rating:
+
+            return 0
+
+        try:
+            if "," in min_rating:
+                min_rating = min_rating.replace(",", ".")
+
+            min_rating_float = float(min_rating)
+            if 0 <= min_rating_float <= 10:
+
+                return min_rating_float
+
+            print(error(f"\nPlease enter a valid number between 0 and 10!\n"))
+
+        except ValueError:
+            print(error("\nPlease enter a valid rating!\n"))
+
+
+def prompt_min_year() -> int:
+    """
+    Prompts the user to enter a minimum year of release.
+    :return:
+        0: int indicating there is no minimum year of release.
+        min_year: int containing the minimum year of release given by the user.
+    """
+    while True:
+        min_year = input(prompt("Enter start year (leave blank for no start year): ")).strip()
+        if not min_year:
+
+            return 0
+
+        if (min_year.isdigit() and
+                len(min_year) == 4 and
+                (min_year.startswith("1") or
+                 min_year.startswith("2"))):
+
+            return int(min_year)
+
+        print(error("\nPlease enter a valid year!\n"))
+
+
+def prompt_max_year() -> int:
+    """
+    Prompts the user to enter a maximum year of release.
+    :return:
+        current_year: int indicating there is no maximum year of release.
+        max_year: int containing the maximum year of release given by the user.
+    """
+    while True:
+        max_year = input(prompt("Enter end year (leave blank for no end year): ")).strip()
+        if not max_year:
+            current_year = datetime.now().year
+
+            return current_year
+
+        if (max_year.isdigit() and
+                len(max_year) == 4 and
+                (max_year.startswith("1") or
+                 max_year.startswith("2"))):
+
+            return int(max_year)
+
+        print(error("\nPlease enter a valid year!\n"))
+
+
 __all__ = [
     "prompt_menu_choice",
     "prompt_press_enter",
@@ -105,4 +185,7 @@ __all__ = [
     "prompt_movie_rating",
     "prompt_movie_year",
     "prompt_sorting_descending",
+    "prompt_min_rating",
+    "prompt_min_year",
+    "prompt_max_year"
 ]

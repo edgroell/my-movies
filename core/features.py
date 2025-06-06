@@ -16,7 +16,10 @@ from utils.user_prompts import (
     prompt_movie_name,
     prompt_movie_rating,
     prompt_movie_year,
-    prompt_sorting_descending
+    prompt_sorting_descending,
+    prompt_min_rating,
+    prompt_min_year,
+    prompt_max_year
 )
 from data.movie_storage import (
     add_movie_to_db,
@@ -179,6 +182,21 @@ def list_movies_sorted_by_year(movies: list) -> None:
     else:
         for movie in movies_sorted_by_year_ascending:
             print(f"{movie["title"]} ({movie["details"]["year"]}): {movie["details"]["rating"]}")
+
+
+def filter_movies(movies: list) -> None:
+    """
+    Filters out movies as per parameters given by user and prints the result.
+    :param movies: list of movies (aka database).
+    :return: None
+    """
+    min_rating = prompt_min_rating()
+    min_year = prompt_min_year()
+    max_year = prompt_max_year()
+    print(title(f"\nFiltered Movies") + ":")
+    for movie in movies:
+        if movie["details"]["rating"] >= min_rating and min_year <= movie["details"]["year"] <= max_year:
+            print(f">>> {movie['title']} ({movie["details"]['year']}): {movie['details']['rating']}")
 
 
 def create_ratings_histogram(movies: list) -> None:

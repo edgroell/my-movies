@@ -10,6 +10,7 @@ from core.features import (
     search_movie,
     list_movies_sorted_by_rating,
     list_movies_sorted_by_year,
+    filter_movies,
     create_ratings_histogram
 )
 from utils.user_prompts import (
@@ -47,7 +48,7 @@ def dispatch_menu() -> None:
         7: ("7. Search Movie", search_movie),
         8: ("8. Movies Sorted by Rating", list_movies_sorted_by_rating),
         9: ("9. Movies Sorted by Year", list_movies_sorted_by_year),
-        10: ("10. Filter Movies", search_movie), # TODO update
+        10: ("10. Filter Movies", filter_movies),
         11: ("11. Create Ratings Histogram", create_ratings_histogram)
     }
 
