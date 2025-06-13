@@ -4,7 +4,7 @@ Module containing all the functions that interact with the db via SQL.
 
 from sqlalchemy import create_engine, text
 
-DB_URL = "sqlite:///data/movies.db"
+from utils.config import DB_URL
 
 engine = create_engine(DB_URL, echo=False) # TODO set echo to False
 
