@@ -2,18 +2,15 @@
 Module that contains all the text styling elements.
 """
 
-
 # Dictionary containing formatting options for text styling.
 formatting = {
     "bold": "\033[1m",
     "underline": "\033[4m",
-    # "white": "\033[37m",
     "red": "\033[31m",
     "green": "\033[32m",
     "blue": "\033[34m",
     "reset": "\033[0m"
 }
-
 
 class TextFormatter:
     """ Class containing all functions to style the text from the CLI """

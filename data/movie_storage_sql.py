@@ -1,12 +1,13 @@
+"""
+Module containing all the functions that interact with the db via SQL.
+"""
+
 from sqlalchemy import create_engine, text
 
-# Define the database URL
 DB_URL = "sqlite:///data/movies.db"
 
-# Create the engine
 engine = create_engine(DB_URL, echo=False) # TODO set echo to False
 
-# Create the movies table if it does not exist
 with engine.connect() as connection:
     connection.execute(text("""
         CREATE TABLE IF NOT EXISTS movies (
@@ -19,17 +20,37 @@ with engine.connect() as connection:
     connection.commit()
 
 
-def list_movies():
-    """ Retrieve all movies from the database """
+def get_movies_from_db() -> list:
+    """
+    Loads the information from the db via SQL and returns the data.
+    :return: movies: list of dictionaries that contains the movies database.
+        Data structure is as follows:
+    [
+        {
+          "title": "A Beautiful Mind",
+          "details": {
+            "rating": 10,
+            "year": 2001
+          }
+        },
+        "..."
+    ]
+    """
     with engine.connect() as connection:
         result = connection.execute(text("SELECT title, year, rating FROM movies"))
         movies = result.fetchall()
 
-    return {row[0]: {"year": row[1], "rating": row[2]} for row in movies}
+    return [{"title": row[0], "details": {"year": row[1], "rating": row[2]}} for row in movies]
 
 
-def add_movie(title, year, rating):
-    """ Add a new movie to the database """
+def add_movie_to_db(title: str, year: int, rating: float) -> None:
+    """
+    Adds a movie to the database via SQL.
+    :param title: str containing the title of the movie.
+    :param year: int containing the year of the movie.
+    :param rating: float containing the rating of the movie.
+    :return: None
+    """
     with engine.connect() as connection:
         try:
             connection.execute(text("INSERT INTO movies (title, year, rating) VALUES (:title, :year, :rating)"),
@@ -40,8 +61,12 @@ def add_movie(title, year, rating):
             print(f"Error: {e}")
 
 
-def delete_movie(title):
-    """ Delete a movie from the database """
+def delete_movie_from_db(title: str) -> None:
+    """
+    Deletes a movie from the database via SQL.
+    :param title: str containing the title of the movie.
+    :return: None
+    """
     with engine.connect() as connection:
         try:
             connection.execute(text("DELETE FROM movies WHERE title = :title"), {"title": title})
@@ -51,8 +76,13 @@ def delete_movie(title):
             print(f"Error: {e}")
 
 
-def update_movie(title, rating):
-    """ Update a movie's rating in the database """
+def update_movie_from_db(title: str, rating: float) -> None:
+    """
+    Updates a movie from the database via SQL.
+    :param title: str containing the title of the movie.
+    :param rating: float containing the rating of the movie.
+    :return: None
+    """
     with engine.connect() as connection:
         try:
             connection.execute(text("UPDATE movies SET rating = :rating WHERE title = :title"), {"title": title, "rating": rating})

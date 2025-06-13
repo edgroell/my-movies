@@ -4,8 +4,7 @@
 # last update: 07-JUN-2025
 """
 
-
-from data.movie_storage import get_movies_from_db
+from data.movie_storage_sql import get_movies_from_db
 from core.features import (
     list_movies,
     add_movie,
@@ -24,12 +23,10 @@ from utils.user_prompts import (
     prompt_menu_choice,
     prompt_press_enter
 )
-from data.movie_storage_sql import list_movies, add_movie, update_movie, delete_movie
 
 title = TextFormatter.title
 success = TextFormatter.success
 error = TextFormatter.error
-
 
 def display_header() -> None:
     """
@@ -84,24 +81,7 @@ def main():
     """ Initiates the my-movies program """
     display_header()
     # Displays and handles the CLI interface
-    #dispatch_menu()
-
-    # Test adding a movie
-    #add_movie("Titanic", 2001, 7.8)
-
-    # Test listing movies
-    movies = list_movies()
-    print(movies)
-
-    # Test updating a movie's rating
-    #update_movie("The Matrix", 9.0)
-    #print(list_movies())
-
-    # Test deleting a movie
-    delete_movie("Inception")
-    #print(list_movies())  # Should be empty if it was the only movie
-
-    #print(movies)
+    dispatch_menu()
 
 
 if __name__ == "__main__":

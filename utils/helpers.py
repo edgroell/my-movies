@@ -2,10 +2,8 @@
 Module that contains all the helper functions.
 """
 
-
 import statistics
 import Levenshtein
-
 
 def is_already_in_database(movies: list, movie_name: str) -> bool:
     """

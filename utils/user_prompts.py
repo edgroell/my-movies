@@ -2,14 +2,11 @@
 Module that consolidates all the user_prompts functions
 """
 
-
 from datetime import datetime
 from utils.text_formatter import TextFormatter
 
-
 prompt = TextFormatter.prompt
 error = TextFormatter.error
-
 
 def prompt_menu_choice() -> int:
     """

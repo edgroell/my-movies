@@ -2,13 +2,10 @@
 Module containing all the functions that interact with the JSON file.
 """
 
-
 import os
 import json
 
-
 FILENAME = os.path.join("data", "data.json")
-
 
 def get_movies_from_db() -> list:
     """

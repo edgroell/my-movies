@@ -2,7 +2,6 @@
 Module that contains all the commands functions from the CLI.
 """
 
-
 import os
 import random
 import matplotlib.pyplot as plt
@@ -26,17 +25,15 @@ from utils.user_prompts import (
     prompt_min_year,
     prompt_max_year
 )
-from data.movie_storage import (
+from data.movie_storage_sql import (
     add_movie_to_db,
     delete_movie_from_db,
-    update_movie_from_db,
+    update_movie_from_db
 )
-
 
 title = TextFormatter.title
 success = TextFormatter.success
 error = TextFormatter.error
-
 
 def list_movies(movies: list) -> None:
     """
@@ -46,7 +43,7 @@ def list_movies(movies: list) -> None:
     """
     print(title(f"{len(movies)} movies in total") + ":")
     for movie in movies:
-        print(f">>> {movie["title"]} ({movie["details"]['year']}): {movie["details"]['rating']}")
+        print(f">>> {movie["title"]} ({movie["details"]["year"]}): {movie["details"]["rating"]}")
 
 
 def add_movie(movies: list) -> None:
@@ -64,7 +61,7 @@ def add_movie(movies: list) -> None:
 
     movie_rating = prompt_movie_rating()
     movie_year = prompt_movie_year()
-    add_movie_to_db(movie_name, movie_rating, movie_year)
+    add_movie_to_db(movie_name, movie_year, movie_rating)
     print(success(f"\nMovie '{movie_name}' successfully added"))
 
 
@@ -221,8 +218,8 @@ def filter_movies(movies: list) -> None:
     for movie in movies:
         if (movie["details"]["rating"] >= min_rating and
                 min_year <= movie["details"]["year"] <= max_year):
-            print(f">>> {movie['title']} ({movie["details"]['year']}): "
-                  f"{movie['details']['rating']}")
+            print(f">>> {movie["title"]} ({movie["details"]["year"]}): "
+                  f"{movie["details"]["rating"]}")
 
 
 def create_ratings_histogram(movies: list) -> None:
