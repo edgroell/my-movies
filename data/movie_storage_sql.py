@@ -67,9 +67,9 @@ def add_movie_to_db(title: str, year: int, rating: float, poster: str) -> None:
             connection.execute(text("INSERT INTO movies (title, year, rating, poster) VALUES (:title, :year, :rating, :poster)"),
                                {"title": title, "year": year, "rating": rating, "poster": poster})
             connection.commit()
-            print(f"Movie '{title}' added successfully.")
+
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"An error occurred: {e}")
 
 
 def delete_movie_from_db(title: str) -> None:
@@ -82,9 +82,9 @@ def delete_movie_from_db(title: str) -> None:
         try:
             connection.execute(text("DELETE FROM movies WHERE title = :title"), {"title": title})
             connection.commit()
-            print(f"Movie '{title}' deleted successfully.")
+
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"An error occurred: {e}")
 
 
 def update_movie_from_db(title: str, rating: float) -> None:
@@ -98,6 +98,6 @@ def update_movie_from_db(title: str, rating: float) -> None:
         try:
             connection.execute(text("UPDATE movies SET rating = :rating WHERE title = :title"), {"title": title, "rating": rating})
             connection.commit()
-            print(f"Movie '{title}' updated successfully.")
+
         except Exception as e:
             print(f"Error: {e}")

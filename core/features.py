@@ -27,6 +27,12 @@ from utils.user_prompts import (
     prompt_min_year,
     prompt_max_year
 )
+from utils.web_generator import (
+    get_movies_cards,
+    open_template,
+    inject_website_content,
+    build_html_page
+)
 from data.movie_storage_sql import (
     add_movie_to_db,
     delete_movie_from_db,
@@ -43,7 +49,7 @@ def list_movies(movies: list) -> None:
     :param movies: list of movies (aka database).
     :return: None
     """
-    print(title(f"{len(movies)} movies in total") + ":")
+    print(title(f"{len(movies)} Movies in Total") + ":")
     for movie in movies:
         print(f">>> {movie["title"]} ({movie["details"]["year"]}): {movie["details"]["rating"]}")
 
@@ -76,8 +82,12 @@ def add_movie(movies: list) -> None:
         movie_year = movie_data["Year"]
         movie_rating = get_movie_rating(movie_data)
         movie_poster = movie_data["Poster"]
-        add_movie_to_db(movie_name, movie_year, movie_rating, movie_poster)
-        print(success(f"\nMovie '{movie_name}' successfully added"))
+        if add_movie_to_db(movie_name, movie_year, movie_rating, movie_poster):
+            print(success(f"\nMovie '{movie_name}' successfully added"))
+
+            return
+
+        print("Sorry, there was a problem adding the movie.")
 
         return
 
@@ -95,8 +105,14 @@ def delete_movie(movies: list) -> None:
 
         return
 
-    delete_movie_from_db(movie_name)
-    print(success(f"\nMovie '{movie_name}' successfully deleted"))
+    if delete_movie_from_db(movie_name):
+        print(success(f"\nMovie '{movie_name}' successfully deleted"))
+
+        return
+
+    print("Sorry, there was a problem deleting movie.")
+
+    return
 
 
 def update_movie(movies: list) -> None:
@@ -237,6 +253,21 @@ def filter_movies(movies: list) -> None:
                 min_year <= movie["details"]["year"] <= max_year):
             print(f">>> {movie["title"]} ({movie["details"]["year"]}): "
                   f"{movie["details"]["rating"]}")
+
+
+def generate_website(movies: list):
+    """
+
+    :param movies:
+    :return:
+    """
+    movies_cards = get_movies_cards(movies)
+    template_path = os.path.join("static", "index_template.html")
+    page_template = open_template(template_path)
+    final_page = inject_website_content(page_template, movies_cards)
+    build_html_page(final_page)
+
+    print(success(f"Website successfully generated"))
 
 
 def create_ratings_histogram(movies: list) -> None:

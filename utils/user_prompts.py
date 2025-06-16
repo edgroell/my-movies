@@ -15,13 +15,13 @@ def prompt_menu_choice() -> int:
     """
     while True:
         print("\n***************************************")
-        menu_choice = input(prompt("Enter choice (0-11): ")).strip()
+        menu_choice = input(prompt("Enter choice (0-12): ")).strip()
         print("***************************************\n")
-        if menu_choice.isdigit() and 0 <= int(menu_choice) <= 11:
+        if menu_choice.isdigit() and 0 <= int(menu_choice) <= 12:
 
             return int(menu_choice)
 
-        print(error("Please enter a number between 0 and 11!"))
+        print(error("Please enter a number between 0 and 12!"))
 
 
 def prompt_press_enter() -> None:

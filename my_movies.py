@@ -1,7 +1,7 @@
 """
 # My Movies
 # by Ed Groell
-# last update: 07-JUN-2025
+# last update: 16-JUN-2025
 """
 
 from data.movie_storage_sql import get_movies_from_db
@@ -16,6 +16,7 @@ from core.features import (
     list_movies_sorted_by_rating,
     list_movies_sorted_by_year,
     filter_movies,
+    generate_website,
     create_ratings_histogram
 )
 from utils.text_formatter import TextFormatter
@@ -54,7 +55,8 @@ def dispatch_menu() -> None:
         8: ("8. Movies Sorted by Rating", list_movies_sorted_by_rating),
         9: ("9. Movies Sorted by Year", list_movies_sorted_by_year),
         10: ("10. Filter Movies", filter_movies),
-        11: ("11. Create Ratings Histogram", create_ratings_histogram)
+        11: ("11. Generate Website", generate_website),
+        12: ("12. Create Ratings Histogram", create_ratings_histogram)
     }
 
     while True:

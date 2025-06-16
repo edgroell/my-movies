@@ -1,4 +1,5 @@
-Levenshtein
-matplotlib
-sqlalchemy
-requests
+Levenshtein~=0.27.1
+matplotlib~=3.10.3
+sqlalchemy~=2.0.41
+requests~=2.32.4
+python-dotenv~=1.1.0

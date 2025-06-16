@@ -2,9 +2,15 @@
 Module containing all functions related to API interactions
 """
 
+import os
 import requests
+from dotenv import load_dotenv
 
-from utils.config import BASE_URL, API_KEY
+from utils.config import BASE_URL
+
+load_dotenv()
+
+api_key = os.getenv("API_KEY")
 
 def fetch_movie_data(title: str, plot="short", return_type="json"):
     """
@@ -16,7 +22,7 @@ def fetch_movie_data(title: str, plot="short", return_type="json"):
         movie_data: dict: containing the movie data.
      """
     params = {
-        "apikey": API_KEY,
+        "apikey": api_key,
         "t": title,
         "plot": plot,
         "r": return_type,
