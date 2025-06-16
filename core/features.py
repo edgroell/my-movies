@@ -20,8 +20,6 @@ from utils.helpers import (
 )
 from utils.user_prompts import (
     prompt_movie_name,
-    prompt_movie_rating,
-    prompt_movie_year,
     prompt_sorting_descending,
     prompt_min_rating,
     prompt_min_year,
@@ -128,7 +126,7 @@ def update_movie(movies: list) -> None:
 
         return
 
-    new_rating = prompt_movie_rating()
+    new_rating = 10
     update_movie_from_db(movie_name, new_rating)
     print(success(f"\nRating of movie '{movie_name}' updated to {new_rating}"))
 
@@ -267,7 +265,7 @@ def generate_website(movies: list):
     final_page = inject_website_content(page_template, movies_cards)
     build_html_page(final_page)
 
-    print(success(f"Website successfully generated"))
+    print(success("Website successfully generated"))
 
 
 def create_ratings_histogram(movies: list) -> None:

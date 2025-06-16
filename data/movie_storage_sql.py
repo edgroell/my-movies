@@ -10,7 +10,7 @@ DB_PATH = os.path.join(os.path.dirname(__file__), "movies.db")
 DB_URL = f"sqlite:///{DB_PATH}"
 
 try:
-    engine = create_engine(DB_URL, echo=False) # TODO set echo to False
+    engine = create_engine(DB_URL, echo=False)
 except Exception as e:
     print(f"Failed to create engine: {e}")
 
@@ -50,7 +50,14 @@ def get_movies_from_db() -> list:
         result = connection.execute(text("SELECT title, year, rating, poster FROM movies"))
         movies = result.fetchall()
 
-    return [{"title": row[0], "details": {"year": row[1], "rating": row[2]}, "poster": row[3]} for row in movies]
+    return [{
+        "title": row[0],
+        "details": {
+            "year": row[1],
+            "rating": row[2],
+            "poster": row[3]
+        }
+    } for row in movies]
 
 
 def add_movie_to_db(title: str, year: int, rating: float, poster: str) -> None:
@@ -64,8 +71,14 @@ def add_movie_to_db(title: str, year: int, rating: float, poster: str) -> None:
     """
     with engine.connect() as connection:
         try:
-            connection.execute(text("INSERT INTO movies (title, year, rating, poster) VALUES (:title, :year, :rating, :poster)"),
-                               {"title": title, "year": year, "rating": rating, "poster": poster})
+            connection.execute(text(
+                "INSERT INTO movies (title, year, rating, poster) "
+                "VALUES (:title, :year, :rating, :poster)"),
+                               {
+                                   "title": title,
+                                   "year": year,
+                                   "rating": rating,
+                                   "poster": poster})
             connection.commit()
 
         except Exception as e:
@@ -80,7 +93,10 @@ def delete_movie_from_db(title: str) -> None:
     """
     with engine.connect() as connection:
         try:
-            connection.execute(text("DELETE FROM movies WHERE title = :title"), {"title": title})
+            connection.execute(text(
+                "DELETE FROM movies "
+                "WHERE title = :title"),
+                {"title": title})
             connection.commit()
 
         except Exception as e:
@@ -96,7 +112,11 @@ def update_movie_from_db(title: str, rating: float) -> None:
     """
     with engine.connect() as connection:
         try:
-            connection.execute(text("UPDATE movies SET rating = :rating WHERE title = :title"), {"title": title, "rating": rating})
+            connection.execute(text(
+                "UPDATE movies "
+                "SET rating = :rating "
+                "WHERE title = :title"),
+                {"title": title, "rating": rating})
             connection.commit()
 
         except Exception as e:

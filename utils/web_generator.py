@@ -1,3 +1,7 @@
+"""
+Module that contains all the functions to generate the HTML frontend.
+"""
+
 import os
 
 def serialize_movie(movie: dict) -> str:
@@ -9,9 +13,10 @@ def serialize_movie(movie: dict) -> str:
     """
     title = movie.get("title", "Name not found")
     year = movie["details"].get("year", "Year not found")
-    if movie.get("poster") == "N/A":
+    if movie["details"].get("poster") == "N/A":
         poster = None
-    poster = movie.get("poster", "Image not found")
+    else:
+        poster = movie.get("poster", "Image not found")
 
     movie_card = f"""
     <li class="movie">

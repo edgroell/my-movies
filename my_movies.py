@@ -25,20 +25,19 @@ from utils.user_prompts import (
     prompt_press_enter
 )
 
+main_title = TextFormatter.main_title
 title = TextFormatter.title
-success = TextFormatter.success
-error = TextFormatter.error
 
 def display_header() -> None:
     """
     Prints the main header of the app.
     :return: None
     """
-    print("\n***************************************")
-    print("************   ", end="")
-    print(success("My Movies"), end="")
-    print("   ************")
-    print("***************************************\n")
+    print("\n****************************************")
+    print("********* ", end="")
+    print(main_title("My Movies"), end="")
+    print(" *********")
+    print("****************************************\n")
 
 
 def dispatch_menu() -> None:
@@ -67,7 +66,7 @@ def dispatch_menu() -> None:
         menu_choice = prompt_menu_choice()
 
         if menu_choice == 0:
-            print("Goodbye!")
+            print("Bye for now & have a nice day!")
 
             break
 

@@ -14,9 +14,9 @@ def prompt_menu_choice() -> int:
     :return: menu_choice: int containing the command to forward to.
     """
     while True:
-        print("\n***************************************")
+        print("\n****************************************")
         menu_choice = input(prompt("Enter choice (0-12): ")).strip()
-        print("***************************************\n")
+        print("****************************************\n")
         if menu_choice.isdigit() and 0 <= int(menu_choice) <= 12:
 
             return int(menu_choice)
@@ -29,9 +29,9 @@ def prompt_press_enter() -> None:
     Prompts the user to press enter before continuing.
     :return: None
     """
-    print("\n***************************************")
-    input(prompt("Press Enter to continue... "))
-    print("***************************************\n")
+    print("\n****************************************")
+    input(prompt("Press Enter ⏎ to continue... "))
+    print("****************************************\n")
 
 
 def prompt_movie_name() -> str:
@@ -48,24 +48,24 @@ def prompt_movie_name() -> str:
         print(error("\nPlease enter a movie name!\n"))
 
 
-def prompt_movie_rating() -> float:
-    """
-    Prompts the user to enter a movie rating.
-    :return: movie_rating: float containing the movie rating given by the user.
-    """
-    while True:
-        try:
-            movie_rating = input(prompt("Enter movie rating (0-10): ")).strip()
-            if "," in movie_rating:
-                movie_rating = movie_rating.replace(",", ".")
-
-            if 0 <= float(movie_rating) <= 10:
-                return float(movie_rating)
-
-            print(error("\nPlease enter a valid number between 0 and 10!\n"))
-
-        except ValueError:
-            print(error("\nPlease enter a valid number!\n"))
+# def prompt_movie_rating() -> float:
+#     """
+#     Prompts the user to enter a movie rating.
+#     :return: movie_rating: float containing the movie rating given by the user.
+#     """
+#     while True:
+#         try:
+#             movie_rating = input(prompt("Enter movie rating (0-10): ")).strip()
+#             if "," in movie_rating:
+#                 movie_rating = movie_rating.replace(",", ".")
+#
+#             if 0 <= float(movie_rating) <= 10:
+#                 return float(movie_rating)
+#
+#             print(error("\nPlease enter a valid number between 0 and 10!\n"))
+#
+#         except ValueError:
+#             print(error("\nPlease enter a valid number!\n"))
 
 
 def prompt_movie_year() -> int:
@@ -124,11 +124,11 @@ def prompt_min_rating() -> int | float:
                 min_rating = min_rating.replace(",", ".")
 
             min_rating_float = float(min_rating)
-            if 0 <= min_rating_float <= 10:
+            if 0 <= min_rating_float <= 100:
 
                 return min_rating_float
 
-            print(error("\nPlease enter a valid number between 0 and 10!\n"))
+            print(error("\nPlease enter a valid number between 0 and 100!\n"))
 
         except ValueError:
             print(error("\nPlease enter a valid rating!\n"))

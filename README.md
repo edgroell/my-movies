@@ -1,11 +1,11 @@
 
 # My Movies 
 
-This project prompts you with the name of an animal and will provide useful information about all different types of the given animal in a convenient HTML format.
+This app aims at collecting all your favorite movies (or all that you want really) and display this collection into a beautiful HTML frontend.
 
 ## Installation
 
-To install this project, simply clone the repository and install the dependencies in requirements.txt using `pip`
+To install this app, simply clone the repository and install the dependencies in requirements.txt using `pip`
 
 ```bash
    pip install -r requirements.txt
@@ -13,7 +13,21 @@ To install this project, simply clone the repository and install the dependencie
 
 ## Usage
 
-To use this project, run the following command `python animals_web_generator.py`
+To use this app, run the following command `python my_movies.py`
+You'll be presented with a CLI menu including 12 options:
+> 0. Exit >>> leave the program
+> 1. List Movies >>> Get a list of all the movies added to the collection with year of release and average rating
+> 2. Add Movie >>> Prompts you to enter a title and will fetch the corresponding data via OMDb database (https://www.omdbapi.com/)
+> 3. Delete Movie >>> Prompts you to enter the title of the movie you want to remove from your collection
+> 4. Update Movie >>> 
+> 5. List Stats >>> Will provide some KPIs about all the movies in your collection (e.g., best-rated movie...)
+> 6. Random Movie >>> Will select a random movie from the collection
+> 7. Search Movie >>> Provides a search engine of your collection (allows minor typos via edit distance)
+> 8. Movies Sorted by Rating >>> Get a list of all movies sorted by descending average rating 
+> 9. Movies Sorted by Year >>> Get a list of all movies sorted by ascending or descending year (your choice)
+> 10. Filter Movies >>> Provides basic filter movies for narrow search of specific movies
+> 11. Generate Website >>> Will build the HTML user interface
+> 12. Create Ratings Histogram >>> Will build and store a ratings histogram of all movies from the collection
 
 ## Project Status
 
@@ -21,10 +35,9 @@ Project is: _in progress_
 
 ## Room for Improvement
 
-> - A list of animal could be provided to the user instead of "guessing" which are available
-> - More data could be provided in the HTML page
-> - The app could be hosted
-> - A GUI could be introduced
+> - A list of movies could be provided to the user instead of "guessing" which are available
+> - More data could be provided in the final HTML page
+> - A GUI could be introduced next
 
 ## Acknowledgements
 
@@ -32,4 +45,4 @@ A special thanks to the entire team at Masterschool for providing the guidance i
 
 ## Contributing
 
-We welcome any contributions! If you'd like to contribute to this project, please reach out to [email@edgroell.com](mailto:email@edgroell.com)
+I welcome any contributions! If you'd like to contribute to this project, please reach out to [email@edgroell.com](mailto:email@edgroell.com)
