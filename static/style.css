@@ -37,6 +37,18 @@ body {
   transform: scale(1.05);
 }
 
+.movie-rating {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  z-index: 10;
+}
+
 .movie {
   position: relative;
   width: 220px;

@@ -13,6 +13,7 @@ def serialize_movie(movie: dict) -> str:
     """
     title = movie.get("title", "Name not found")
     year = movie["details"].get("year", "Year not found")
+    rating = movie["details"].get("rating", "Rating not found")
     if movie["details"].get("poster") == "N/A":
         poster = None
     else:
@@ -24,6 +25,7 @@ def serialize_movie(movie: dict) -> str:
             <div class="movie-poster" style="background-image: url('{poster}');"></div>
             <div class="movie-title">{title}</div>
             <div class="movie-year">{year}</div>
+            <div class="movie-rating">{rating}</div>
         </li>
         """
     else:
@@ -33,6 +35,7 @@ def serialize_movie(movie: dict) -> str:
             <div class="movie-poster" style="background-image: url('{poster}');"></div>
             <div class="movie-title">{title}</div>
             <div class="movie-year">{year}</div>
+            <div class="movie-rating">{rating}</div>
             <div class="movie-note">{note}</div>
         </li>
         """
