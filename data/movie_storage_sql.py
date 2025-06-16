@@ -2,23 +2,32 @@
 Module containing all the functions that interact with the db via SQL.
 """
 
+import os
+
 from sqlalchemy import create_engine, text
 
-from utils.config import DB_URL
+DB_PATH = os.path.join(os.path.dirname(__file__), "movies.db")
+DB_URL = f"sqlite:///{DB_PATH}"
 
-engine = create_engine(DB_URL, echo=False) # TODO set echo to False
+try:
+    engine = create_engine(DB_URL, echo=False) # TODO set echo to False
+except Exception as e:
+    print(f"Failed to create engine: {e}")
 
-with engine.connect() as connection:
-    connection.execute(text("""
-        CREATE TABLE IF NOT EXISTS movies (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT UNIQUE NOT NULL,
-            year INTEGER NOT NULL,
-            rating REAL NOT NULL
-        )
-    """))
-    connection.commit()
-
+try:
+    with engine.connect() as connection:
+        connection.execute(text("""
+            CREATE TABLE IF NOT EXISTS movies (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT UNIQUE NOT NULL,
+                year INTEGER NOT NULL,
+                rating REAL NOT NULL, 
+                poster TEXT UNIQUE NOT NULL
+            )
+        """))
+        connection.commit()
+except Exception as e:
+    print(f"Failed to create table: {e}")
 
 def get_movies_from_db() -> list:
     """
@@ -30,31 +39,33 @@ def get_movies_from_db() -> list:
           "title": "A Beautiful Mind",
           "details": {
             "rating": 10,
-            "year": 2001
+            "year": 2001,
+            "poster": "https://..."
           }
         },
         "..."
     ]
     """
     with engine.connect() as connection:
-        result = connection.execute(text("SELECT title, year, rating FROM movies"))
+        result = connection.execute(text("SELECT title, year, rating, poster FROM movies"))
         movies = result.fetchall()
 
-    return [{"title": row[0], "details": {"year": row[1], "rating": row[2]}} for row in movies]
+    return [{"title": row[0], "details": {"year": row[1], "rating": row[2]}, "poster": row[3]} for row in movies]
 
 
-def add_movie_to_db(title: str, year: int, rating: float) -> None:
+def add_movie_to_db(title: str, year: int, rating: float, poster: str) -> None:
     """
     Adds a movie to the database via SQL.
     :param title: str containing the title of the movie.
     :param year: int containing the year of the movie.
     :param rating: float containing the rating of the movie.
+    :param poster: str containing the poster image URL of the movie.
     :return: None
     """
     with engine.connect() as connection:
         try:
-            connection.execute(text("INSERT INTO movies (title, year, rating) VALUES (:title, :year, :rating)"),
-                               {"title": title, "year": year, "rating": rating})
+            connection.execute(text("INSERT INTO movies (title, year, rating, poster) VALUES (:title, :year, :rating, :poster)"),
+                               {"title": title, "year": year, "rating": rating, "poster": poster})
             connection.commit()
             print(f"Movie '{title}' added successfully.")
         except Exception as e:

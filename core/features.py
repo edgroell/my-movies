@@ -7,8 +7,10 @@ import random
 import matplotlib.pyplot as plt
 
 from utils.text_formatter import TextFormatter
+from utils.api_calls import fetch_movie_data
 from utils.helpers import (
     is_already_in_database,
+    get_movie_rating,
     get_ratings_list,
     get_average_rating,
     get_median_rating,
@@ -59,10 +61,25 @@ def add_movie(movies: list) -> None:
 
         return
 
-    movie_rating = prompt_movie_rating()
-    movie_year = prompt_movie_year()
-    add_movie_to_db(movie_name, movie_year, movie_rating)
-    print(success(f"\nMovie '{movie_name}' successfully added"))
+    movie_data = fetch_movie_data(movie_name)
+    if movie_data is None:
+
+        return
+
+    if movie_data["Response"] == "False":
+        print(f"Sorry, {movie_data["Error"]}")
+
+        return
+
+    if movie_data and movie_data["Response"] == "True":
+        movie_name = movie_data["Title"]
+        movie_year = movie_data["Year"]
+        movie_rating = get_movie_rating(movie_data)
+        movie_poster = movie_data["Poster"]
+        add_movie_to_db(movie_name, movie_year, movie_rating, movie_poster)
+        print(success(f"\nMovie '{movie_name}' successfully added"))
+
+        return
 
 
 def delete_movie(movies: list) -> None:

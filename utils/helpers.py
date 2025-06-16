@@ -22,6 +22,60 @@ def is_already_in_database(movies: list, movie_name: str) -> bool:
     return False
 
 
+def normalize_all_ratings(ratings_list: list) -> list:
+    """
+    Takes all ratings from API data set and normalizes them.
+    :param ratings_list: list: contains all ratings from API data.
+    :return: normalized_ratings_list: list: contains normalized
+        (only floats) ratings from API data.
+    """
+    normalized_ratings_list = []
+    for rating in ratings_list:
+        if rating[-3:] == "/10":
+            new_rating = float(rating[:-3]) * 10
+            normalized_ratings_list.append(new_rating)
+        elif rating[-4:] == "/100":
+            new_rating = float(rating[:-4])
+            normalized_ratings_list.append(new_rating)
+        elif rating[-1:] == "%":
+            new_rating = float(rating[:-1])
+            normalized_ratings_list.append(new_rating)
+
+    return normalized_ratings_list
+
+
+def get_average_normalized_ratings(normalized_ratings_list: list) -> float:
+    """
+    Takes all normalized ratings and returns the rounded average.
+    :param normalized_ratings_list: contains normalized
+        (only floats) ratings from API data.
+    :return: movie_rating: float: returns rounded average of normalized ratings.
+    """
+    movie_rating = round(statistics.mean(normalized_ratings_list), 2)
+
+    return movie_rating
+
+
+def get_movie_rating(movie_data: dict) -> float:
+    """
+    Extracts all ratings from the API into a list of strings.
+    :param movie_data: list: containing all movie data from the API.
+    :return: movie_rating: float: returns rounded average of normalized ratings.
+    """
+    ratings_list = []
+    ratings = movie_data["Ratings"]
+    for rating in ratings:
+        ratings_list.append(rating["Value"])
+
+    if ratings_list:
+        normalized_ratings_list = normalize_all_ratings(ratings_list)
+        movie_rating = get_average_normalized_ratings(normalized_ratings_list)
+    else:
+        movie_rating = "N/A"
+
+    return movie_rating
+
+
 def get_ratings_list(movies: list) -> list:
     """
     Collects all ratings from each movie in the database.
@@ -30,7 +84,10 @@ def get_ratings_list(movies: list) -> list:
     """
     ratings_list = []
     for movie in movies:
-        ratings_list.append(movie["details"]["rating"])
+        try:
+            ratings_list.append(int(movie["details"]["rating"]))
+        except ValueError:
+            pass
 
     return ratings_list
 
