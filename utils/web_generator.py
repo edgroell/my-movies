@@ -16,7 +16,7 @@ def serialize_movie(movie: dict) -> str:
     if movie["details"].get("poster") == "N/A":
         poster = None
     else:
-        poster = movie.get("poster", "Image not found")
+        poster = movie["details"].get("poster", "Image not found")
 
     movie_card = f"""
     <li class="movie">
