@@ -21,7 +21,8 @@ try:
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT UNIQUE NOT NULL,
                 year INTEGER NOT NULL,
-                rating REAL NOT NULL, 
+                rating REAL NOT NULL,
+                note TEXT NOT NULL,
                 poster TEXT UNIQUE NOT NULL
             )
         """))
@@ -38,8 +39,9 @@ def get_movies_from_db() -> list:
         {
           "title": "A Beautiful Mind",
           "details": {
-            "rating": 10,
             "year": 2001,
+            "rating": 10,
+            "note": "...",
             "poster": "https://..."
           }
         },
@@ -47,7 +49,7 @@ def get_movies_from_db() -> list:
     ]
     """
     with engine.connect() as connection:
-        result = connection.execute(text("SELECT title, year, rating, poster FROM movies"))
+        result = connection.execute(text("SELECT title, year, rating, note, poster FROM movies"))
         movies = result.fetchall()
 
     return [{
@@ -55,41 +57,52 @@ def get_movies_from_db() -> list:
         "details": {
             "year": row[1],
             "rating": row[2],
-            "poster": row[3]
+            "note": row[3],
+            "poster": row[4]
         }
     } for row in movies]
 
 
-def add_movie_to_db(title: str, year: int, rating: float, poster: str) -> None:
+def add_movie_to_db(title: str, year: int, rating: float, note: str, poster: str) -> bool:
     """
     Adds a movie to the database via SQL.
     :param title: str containing the title of the movie.
     :param year: int containing the year of the movie.
     :param rating: float containing the rating of the movie.
+    :param: note: str containing the note on the movie.
     :param poster: str containing the poster image URL of the movie.
-    :return: None
+    :return: bool:
+        True: if movie successfully added to database.
+        False: if an error occurred.
     """
     with engine.connect() as connection:
         try:
             connection.execute(text(
-                "INSERT INTO movies (title, year, rating, poster) "
-                "VALUES (:title, :year, :rating, :poster)"),
+                "INSERT INTO movies (title, year, rating, note, poster) "
+                "VALUES (:title, :year, :rating, :note, :poster)"),
                                {
                                    "title": title,
                                    "year": year,
                                    "rating": rating,
+                                   "note": note,
                                    "poster": poster})
             connection.commit()
+
+            return True
 
         except Exception as e:
             print(f"An error occurred: {e}")
 
+            return False
 
-def delete_movie_from_db(title: str) -> None:
+
+def delete_movie_from_db(title: str) -> bool:
     """
     Deletes a movie from the database via SQL.
     :param title: str containing the title of the movie.
-    :return: None
+    :return: bool:
+        True: if movie successfully deleted from database.
+        False: if an error occurred.
     """
     with engine.connect() as connection:
         try:
@@ -99,25 +112,35 @@ def delete_movie_from_db(title: str) -> None:
                 {"title": title})
             connection.commit()
 
+            return True
+
         except Exception as e:
             print(f"An error occurred: {e}")
 
+            return False
 
-def update_movie_from_db(title: str, rating: float) -> None:
+
+def update_movie_from_db(title: str, note: str) -> bool:
     """
     Updates a movie from the database via SQL.
     :param title: str containing the title of the movie.
-    :param rating: float containing the rating of the movie.
-    :return: None
+    :param note: str containing a personal note on the movie.
+    :return: bool:
+        True: if movie successfully updated in database.
+        False: if an error occurred.
     """
     with engine.connect() as connection:
         try:
             connection.execute(text(
                 "UPDATE movies "
-                "SET rating = :rating "
+                "SET note = :note "
                 "WHERE title = :title"),
-                {"title": title, "rating": rating})
+                {"title": title, "note": note})
             connection.commit()
 
+            return True
+
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"An error occurred: {e}")
+
+            return False

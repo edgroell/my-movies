@@ -20,6 +20,8 @@ from utils.helpers import (
 )
 from utils.user_prompts import (
     prompt_movie_name,
+    prompt_movie_note,
+    prompt_whether_movie_note,
     prompt_sorting_descending,
     prompt_min_rating,
     prompt_min_year,
@@ -48,8 +50,16 @@ def list_movies(movies: list) -> None:
     :return: None
     """
     print(title(f"{len(movies)} Movies in Total") + ":")
-    for movie in movies:
-        print(f">>> {movie["title"]} ({movie["details"]["year"]}): {movie["details"]["rating"]}")
+    if len(movies) == 0:
+        print("No movies in your collection yet!\n"
+              "You should add your favorite movies...")
+    else:
+        for movie in movies:
+            print(f">>> {movie["title"]} ({movie["details"]["year"]}): {movie["details"]["rating"]}")
+            if not movie["details"]["note"] == "N/A":
+                print(f" 📝 {movie['details']['note']}")
+            else:
+                print(" ❌ This movie has no attached note...")
 
 
 def add_movie(movies: list) -> None:
@@ -61,7 +71,7 @@ def add_movie(movies: list) -> None:
     print(title("Add Movie") + ":")
     movie_name = prompt_movie_name()
     if is_already_in_database(movies, movie_name):
-        print(error(f"\nSorry, the movie '{movie_name}' is already in the database!"))
+        print("\n" + error(f"Sorry, the movie '{movie_name}' is already in the database!"))
 
         return
 
@@ -79,9 +89,10 @@ def add_movie(movies: list) -> None:
         movie_name = movie_data["Title"]
         movie_year = movie_data["Year"]
         movie_rating = get_movie_rating(movie_data)
+        movie_note = prompt_whether_movie_note()
         movie_poster = movie_data["Poster"]
-        if add_movie_to_db(movie_name, movie_year, movie_rating, movie_poster):
-            print(success(f"\nMovie '{movie_name}' successfully added"))
+        if add_movie_to_db(movie_name, movie_year, movie_rating, movie_note, movie_poster):
+            print("\n" + success(f"Movie '{movie_name}' successfully added"))
 
             return
 
@@ -99,12 +110,12 @@ def delete_movie(movies: list) -> None:
     print(title("Delete Movie") + ":")
     movie_name = prompt_movie_name()
     if not is_already_in_database(movies, movie_name):
-        print(error(f"\nSorry, the movie '{movie_name}' is not in the database!"))
+        print("\n" + error(f"Sorry, the movie '{movie_name}' is not in the database!"))
 
         return
 
     if delete_movie_from_db(movie_name):
-        print(success(f"\nMovie '{movie_name}' successfully deleted"))
+        print("\n" + success(f"Movie '{movie_name}' successfully deleted"))
 
         return
 
@@ -122,13 +133,21 @@ def update_movie(movies: list) -> None:
     print(title("Update Movie") + ":")
     movie_name = prompt_movie_name()
     if not is_already_in_database(movies, movie_name):
-        print(error(f"\nSorry, the movie '{movie_name}' is not in the database!"))
+        print("\n" + error(f"Sorry, the movie '{movie_name}' is not in the database!"))
 
         return
 
-    new_rating = 10
-    update_movie_from_db(movie_name, new_rating)
-    print(success(f"\nRating of movie '{movie_name}' updated to {new_rating}"))
+    for movie in movies:
+        if movie_name.strip().lower() == movie["title"].strip().lower():
+            print(f"Current note: '{movie["details"]["note"]}'")
+
+    movie_note = prompt_movie_note()
+    if update_movie_from_db(movie_name, movie_note):
+        print("\n" + success(f"Note successfully added to the movie '{movie_name}'"))
+
+        return
+
+    print("Sorry, there was a problem updating the movie.")
 
 
 def list_stats(movies: list) -> None:

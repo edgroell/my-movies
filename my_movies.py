@@ -59,7 +59,7 @@ def dispatch_menu() -> None:
     }
 
     while True:
-        print(title("Menu") + ":")
+        print(title("Menu"))
         for command in menu.values():
             print(command[0])
 

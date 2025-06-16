@@ -45,7 +45,32 @@ def prompt_movie_name() -> str:
 
             return movie_name
 
-        print(error("\nPlease enter a movie name!\n"))
+        print("\n" + error("Please enter a movie name!\n"))
+
+
+def prompt_movie_note() -> str:
+    """
+    Prompts the user to enter a new note on the given movie.
+    :return: new_note: str containing the movie note.
+    """
+    movie_note = input(prompt("Enter movie note: ")).strip()
+
+    return movie_note
+
+
+def prompt_whether_movie_note() -> str:
+    while True:
+        note_choice = input(prompt("Do you want to add a note (y/n): ")).strip().lower()
+        if note_choice == "y":
+            movie_note = prompt_movie_note()
+
+            return movie_note
+
+        if note_choice == "n":
+
+            return "N/A"
+
+        print("\n" + error("Please enter a valid answer (y/n)!\n"))
 
 
 # def prompt_movie_rating() -> float:
@@ -103,7 +128,7 @@ def prompt_sorting_descending() -> bool:
 
             return False
 
-        print(error("\nPlease enter a valid answer (y/n)!\n"))
+        print("\n" + error("Please enter a valid answer (y/n)!\n"))
 
 
 def prompt_min_rating() -> int | float:
@@ -128,10 +153,10 @@ def prompt_min_rating() -> int | float:
 
                 return min_rating_float
 
-            print(error("\nPlease enter a valid number between 0 and 100!\n"))
+            print("\n" + error("Please enter a valid number between 0 and 100!\n"))
 
         except ValueError:
-            print(error("\nPlease enter a valid rating!\n"))
+            print("\n" + error("Please enter a valid rating!\n"))
 
 
 def prompt_min_year() -> int:
@@ -154,7 +179,7 @@ def prompt_min_year() -> int:
 
             return int(min_year)
 
-        print(error("\nPlease enter a valid year!\n"))
+        print("\n" + error("Please enter a valid year!\n"))
 
 
 def prompt_max_year() -> int:
@@ -179,17 +204,18 @@ def prompt_max_year() -> int:
 
                 return int(max_year)
 
-            print(error("\nPlease enter a valid year, not in the future!\n"))
+            print("\n" + error("Please enter a valid year, not in the future!\n"))
 
         except ValueError:
-            print(error("\nPlease enter a year!\n"))
+            print("\n" + error("Please enter a year!\n"))
 
 
 __all__ = [
     "prompt_menu_choice",
     "prompt_press_enter",
     "prompt_movie_name",
-    "prompt_movie_rating",
+    "prompt_movie_note",
+    "prompt_whether_movie_note",
     "prompt_movie_year",
     "prompt_sorting_descending",
     "prompt_min_rating",

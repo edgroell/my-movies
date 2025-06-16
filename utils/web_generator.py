@@ -16,15 +16,26 @@ def serialize_movie(movie: dict) -> str:
     if movie["details"].get("poster") == "N/A":
         poster = None
     else:
-        poster = movie["details"].get("poster", "Image not found")
+        poster = movie["details"].get("poster")
 
-    movie_card = f"""
-    <li class="movie">
-        <div class="movie-poster" style="background-image: url('{poster}');"></div>
-        <div class="movie-title">{title}</div>
-        <div class="movie-year">{year}</div>
-    </li>
-    """
+    if movie["details"].get("note") == "N/A":
+        movie_card = f"""
+        <li class="movie">
+            <div class="movie-poster" style="background-image: url('{poster}');"></div>
+            <div class="movie-title">{title}</div>
+            <div class="movie-year">{year}</div>
+        </li>
+        """
+    else:
+        note = movie["details"].get("note")
+        movie_card = f"""
+        <li class="movie">
+            <div class="movie-poster" style="background-image: url('{poster}');"></div>
+            <div class="movie-title">{title}</div>
+            <div class="movie-year">{year}</div>
+            <div class="movie-note">{note}</div>
+        </li>
+        """
 
     return movie_card
 

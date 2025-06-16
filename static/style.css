@@ -38,12 +38,13 @@ body {
 }
 
 .movie {
+  position: relative;
   width: 220px;
   background: white;
   border-radius: 8px;
-  overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
+  margin: 20px;
 }
 
 .movie:hover {
@@ -61,18 +62,34 @@ body {
   font-size: 0.9em;
   color: #666;
   margin-top: 5px;
+  margin-bottom: 15px;
 }
 
 .movie-poster {
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
   width: 100%;
   height: 280px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transition: transform 0.3s ease;
+  border-radius: 8px 8px 0 0; /* Rounded corners for the top of the poster */
 }
 
-.movie:hover .movie-poster {
-  transform: scale(1.1);
+.movie-note {
+  display: none;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 7px;
+  border-radius: 4px;
+  width: 160px;
+  font-size: 0.8em;
+  text-align: center;
+  z-index: 100;
+  top: -25px; /* Position more towards the top */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.movie:hover .movie-note {
+  display: block;
 }
