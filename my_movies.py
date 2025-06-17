@@ -1,10 +1,9 @@
 """
 # My Movies
 # by Ed Groell
-# last update: 16-JUN-2025
+# last update: 17-JUN-2025
 """
 
-from data.movie_storage_sql import get_movies_from_db
 from core.features import (
     list_movies,
     add_movie,
@@ -19,9 +18,20 @@ from core.features import (
     generate_website,
     create_ratings_histogram
 )
+from data.movie_storage_sql import get_movies_from_db
+from users.user_management import (
+    list_users,
+    validate_user,
+    add_user,
+    delete_user,
+    update_user,
+    get_user_id
+)
+from users.user_storage_sql import get_users_from_db
 from utils.text_formatter import TextFormatter
 from utils.user_prompts import (
-    prompt_menu_choice,
+    prompt_user_menu_choice,
+    prompt_main_menu_choice,
     prompt_press_enter
 )
 
@@ -38,11 +48,53 @@ def display_header() -> None:
     print(main_title("My Movies"), end="")
     print(" *********")
     print("****************************************\n")
+    print("          Welcome to My Movies")
+    print("\n****************************************\n")
 
 
-def dispatch_menu() -> None:
-    """ Coordinates the different commands available from the CLI """
-    menu = {
+def select_user() -> str | bool | None:
+    """ Coordinates the different commands available around user management """
+    user_menu = {
+        0: ("0. Exit", None),
+        1: ("1. Select User", validate_user),
+        2: ("2. Add User", add_user),
+        3: ("3. Delete User", delete_user),
+        4: ("4. Update User", update_user)
+    }
+
+    while True:
+        users = get_users_from_db()
+        list_users(users)
+        print("\n" + title("User Menu") + ":")
+        for command in user_menu.values():
+            print(command[0])
+
+        user_choice = prompt_user_menu_choice()
+
+        if user_choice == 0:
+
+            return False
+
+        command = user_menu.get(user_choice)
+        if user_choice == 1:
+            current_user = command[1](users)
+            if current_user is None:
+                continue
+
+            if current_user:
+
+                return current_user
+
+        if command and command[1]:
+            result = command[1](users)
+            if result is not None:
+
+                return result
+
+
+def dispatch_menu(current_user: str) -> bool | None:
+    """ Coordinates the different commands available from the CLI for the current user """
+    main_menu = {
         0: ("0. Exit", None),
         1: ("1. List Movies", list_movies),
         2: ("2. Add Movie", add_movie),
@@ -55,34 +107,50 @@ def dispatch_menu() -> None:
         9: ("9. Movies Sorted by Year", list_movies_sorted_by_year),
         10: ("10. Filter Movies", filter_movies),
         11: ("11. Generate Website", generate_website),
-        12: ("12. Create Ratings Histogram", create_ratings_histogram)
+        12: ("12. Create Ratings Histogram", create_ratings_histogram),
+        13: ("13. Switch User", None)
     }
 
     while True:
-        print(title("Menu"))
-        for command in menu.values():
+        print(f"Hey {current_user} 👋 What can I do for you today?!")
+        print("\n" + title("Main Menu") + ":")
+        for key, command in main_menu.items():
             print(command[0])
 
-        menu_choice = prompt_menu_choice()
+        menu_choice = prompt_main_menu_choice()
 
         if menu_choice == 0:
-            print("Bye for now & have a nice day!")
 
-            break
+            return False
 
-        movies = get_movies_from_db()
-        command = menu.get(menu_choice)
+        if menu_choice == 13:
+            new_user = select_user()
+            if new_user:
+                current_user = new_user
+                continue
+
+        user_id = get_user_id(current_user)
+        movies = get_movies_from_db(user_id)
+        command = main_menu.get(menu_choice)
         if command and command[1]:
-            command[1](movies)
+            command[1](movies, current_user)
 
         prompt_press_enter()
 
 
 def main():
-    """ Initiates the my-movies program """
+    """ Initiates the My Movies app """
     display_header()
-    # Displays and handles the CLI interface
-    dispatch_menu()
+    current_user = select_user()
+
+    while current_user:
+        if not dispatch_menu(current_user):
+
+            break
+
+        current_user = select_user()
+
+    print("Bye for now & have a great day! 🚀")
 
 
 if __name__ == "__main__":

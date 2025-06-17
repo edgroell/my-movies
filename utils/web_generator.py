@@ -102,16 +102,17 @@ def inject_website_content(page_template: str, movies_cards: str) -> str:
     return final_page
 
 
-def build_html_page(final_page: str) -> None:
+def build_html_page(final_page: str, current_user: str) -> None:
     """
     Builds the final html page containing the movies cards.
     :param final_page: str containing the final page in html format.
+    :param current_user: str containing the current username.
     :return: None
     """
     if not os.path.exists("output"):
         os.mkdir("output")
 
-    file_path = os.path.join("output", "index.html")
+    file_path = os.path.join("output", f"{current_user}_website.html")
 
     with open(file_path, "w", encoding="utf-8") as handle:
         handle.write(final_page)

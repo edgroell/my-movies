@@ -2,20 +2,36 @@
 Module that contains all the helper functions.
 """
 
-import statistics
 import Levenshtein
+import statistics
 
-def is_already_in_database(movies: list, movie_name: str) -> bool:
+def is_already_in_user_database(users: list, user_name: str) -> bool:
     """
-    Performs a check whether the given movie is already in the database.
+    Performs a check whether the given user is already in the user database.
+    :param users: list of all users.
+    :param user_name: str containing the username to be checked.
+    :return: bool:
+        True if the user is already in the user database,
+        False otherwise.
+    """
+    for user in users:
+        if user["name"] == user_name.strip():
+
+            return True
+
+    return False
+
+def is_already_in_movie_database(movies: list, movie_name: str) -> bool:
+    """
+    Performs a check whether the given movie is already in the movie database.
     :param movies: list of movies (aka database).
     :param movie_name: str containing the movie title to be checked.
     :return: bool:
-        True if the movie is already in the database.
+        True if the movie is already in the movie database,
         False otherwise.
     """
     for movie in movies:
-        if movie["title"].lower() == movie_name.lower().strip():
+        if movie["title"] == movie_name.strip():
 
             return True
 
@@ -96,7 +112,7 @@ def get_ratings_list(movies: list) -> list:
     ratings_list = []
     for movie in movies:
         try:
-            ratings_list.append(int(movie["details"]["rating"]))
+            ratings_list.append(float(movie["details"]["rating"]))
         except ValueError:
             pass
 

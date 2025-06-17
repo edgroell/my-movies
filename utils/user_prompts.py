@@ -1,25 +1,73 @@
 """
-Module that consolidates all the user_prompts functions
+Module that consolidates all the user prompting functions.
 """
 
 from datetime import datetime
+
+from utils.helpers import is_already_in_user_database
 from utils.text_formatter import TextFormatter
 
 prompt = TextFormatter.prompt
 error = TextFormatter.error
 
-def prompt_menu_choice() -> int:
+def prompt_user_menu_choice() -> int:
     """
-    Prompts the user to enter a menu choice.
-    :return: menu_choice: int containing the command to forward to.
+    Prompts the user to enter a user menu choice.
+    :return: user_menu_choice: int containing the selected command.
     """
     while True:
         print("\n****************************************")
-        menu_choice = input(prompt("Enter choice (0-12): ")).strip()
+        user_menu_choice = input(prompt("Enter choice (0-4): ")).strip()
         print("****************************************\n")
-        if menu_choice.isdigit() and 0 <= int(menu_choice) <= 12:
+        if user_menu_choice.isdigit() and 0 <= int(user_menu_choice) <= 4:
 
-            return int(menu_choice)
+            return int(user_menu_choice)
+
+        print(error("Please enter a number between 0 and 4!"))
+
+
+def prompt_user_name():
+    """
+    Prompts the user to enter a username.
+    :return: user_name: string containing the selected username.
+    """
+    while True:
+        user_name = input(prompt("Enter a Username: ")).strip()
+        if user_name:
+
+            return user_name
+
+        print(error("Please enter a username!"))
+
+
+def prompt_new_user_name(users: list):
+    """
+    Prompts the user to enter a new username.
+    :param users: list of all the users.
+    :return: new_user_name: string containing the selected username.
+    """
+    while True:
+        new_user_name = input(prompt("Enter NEW Username: ")).strip()
+        if is_already_in_user_database(users, new_user_name):
+            print(error(f"Sorry, the user '{new_user_name}' already exists!"))
+        else:
+            if new_user_name:
+
+                return new_user_name
+
+
+def prompt_main_menu_choice() -> int:
+    """
+    Prompts the user to enter a main menu choice.
+    :return: main_menu_choice: int containing the selected command.
+    """
+    while True:
+        print("\n****************************************")
+        main_menu_choice = input(prompt("Enter choice (0-13): ")).strip()
+        print("****************************************\n")
+        if main_menu_choice.isdigit() and 0 <= int(main_menu_choice) <= 13:
+
+            return int(main_menu_choice)
 
         print(error("Please enter a number between 0 and 12!"))
 
@@ -93,21 +141,21 @@ def prompt_whether_movie_note() -> str:
 #             print(error("\nPlease enter a valid number!\n"))
 
 
-def prompt_movie_year() -> int:
-    """
-    Prompts the user to enter a movie year of release.
-    :return: movie_year: int containing the movie year of release given by the user.
-    """
-    while True:
-        movie_year = input(prompt("Enter movie year of release: ")).strip()
-        if (movie_year.isdigit() and
-                len(movie_year) == 4 and
-                (movie_year.startswith("1") or
-                 movie_year.startswith("2"))):
-
-            return int(movie_year)
-
-        print(error("\nPlease enter a valid year!\n"))
+# def prompt_movie_year() -> int:
+#     """
+#     Prompts the user to enter a movie year of release.
+#     :return: movie_year: int containing the movie year of release given by the user.
+#     """
+#     while True:
+#         movie_year = input(prompt("Enter movie year of release: ")).strip()
+#         if (movie_year.isdigit() and
+#                 len(movie_year) == 4 and
+#                 (movie_year.startswith("1") or
+#                  movie_year.startswith("2"))):
+#
+#             return int(movie_year)
+#
+#         print(error("\nPlease enter a valid year!\n"))
 
 
 def prompt_sorting_descending() -> bool:
@@ -119,7 +167,7 @@ def prompt_sorting_descending() -> bool:
     """
     while True:
         sorting_choice = input(prompt(
-            "Do you want the latest movies first? (y/n) ")).strip().lower()
+            "Do you want the latest movies first? (y/n): ")).strip().lower()
         if sorting_choice == "y":
 
             return True
@@ -128,7 +176,7 @@ def prompt_sorting_descending() -> bool:
 
             return False
 
-        print("\n" + error("Please enter a valid answer (y/n)!\n"))
+        print(error("Please enter a valid answer (y/n)!"))
 
 
 def prompt_min_rating() -> int | float:
@@ -211,12 +259,14 @@ def prompt_max_year() -> int:
 
 
 __all__ = [
-    "prompt_menu_choice",
+    "prompt_user_menu_choice",
+    "prompt_user_name",
+    "prompt_new_user_name",
+    "prompt_main_menu_choice",
     "prompt_press_enter",
     "prompt_movie_name",
     "prompt_movie_note",
     "prompt_whether_movie_note",
-    "prompt_movie_year",
     "prompt_sorting_descending",
     "prompt_min_rating",
     "prompt_min_year",
