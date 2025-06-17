@@ -4,6 +4,8 @@ Module that contains all the functions to generate the HTML frontend.
 
 import os
 
+from utils.config import IMDB_BASE_URL
+
 def serialize_movie(movie: dict) -> str:
     """
     Builds the entire string in HTML format for the given movie.
@@ -14,6 +16,10 @@ def serialize_movie(movie: dict) -> str:
     title = movie.get("title", "Name not found")
     year = movie["details"].get("year", "Year not found")
     rating = movie["details"].get("rating", "Rating not found")
+    if movie["details"].get("imdbID") == "N/A":
+        link = None
+    link = f"{IMDB_BASE_URL}{movie["details"].get("imdbID")}"
+
     if movie["details"].get("poster") == "N/A":
         poster = None
     else:
@@ -22,21 +28,25 @@ def serialize_movie(movie: dict) -> str:
     if movie["details"].get("note") == "N/A":
         movie_card = f"""
         <li class="movie">
-            <div class="movie-poster" style="background-image: url('{poster}');"></div>
-            <div class="movie-title">{title}</div>
-            <div class="movie-year">{year}</div>
-            <div class="movie-rating">{rating}</div>
+            <a href="{link}" target="_blank" style="text-decoration: none; color: inherit;">
+                <div class="movie-poster" style="background-image: url('{poster}');"></div>
+                <div class="movie-title">{title}</div>
+                <div class="movie-year">{year}</div>
+                <div class="movie-rating">{rating}</div>
+            </a>
         </li>
         """
     else:
         note = movie["details"].get("note")
         movie_card = f"""
         <li class="movie">
-            <div class="movie-poster" style="background-image: url('{poster}');"></div>
-            <div class="movie-title">{title}</div>
-            <div class="movie-year">{year}</div>
-            <div class="movie-rating">{rating}</div>
-            <div class="movie-note">{note}</div>
+            <a href="{link}" target="_blank" style="text-decoration: none; color: inherit;">
+                <div class="movie-poster" style="background-image: url('{poster}');"></div>
+                <div class="movie-title">{title}</div>
+                <div class="movie-year">{year}</div>
+                <div class="movie-rating">{rating}</div>
+                <div class="movie-note">{note}</div>
+            </a>
         </li>
         """
 

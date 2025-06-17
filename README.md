@@ -19,7 +19,7 @@ You'll be presented with a CLI menu including 12 options:
 > 1. List Movies >>> Get a list of all the movies added to the collection with year of release and average rating
 > 2. Add Movie >>> Prompts you to enter a title and will fetch the corresponding data via OMDb database (https://www.omdbapi.com/)
 > 3. Delete Movie >>> Prompts you to enter the title of the movie you want to remove from your collection
-> 4. Update Movie >>> 
+> 4. Update Movie >>> Prompts you to enter a personal note on any given movie from the collection
 > 5. List Stats >>> Will provide some KPIs about all the movies in your collection (e.g., best-rated movie...)
 > 6. Random Movie >>> Will select a random movie from the collection
 > 7. Search Movie >>> Provides a search engine of your collection (allows minor typos via edit distance)

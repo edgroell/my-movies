@@ -91,7 +91,9 @@ def add_movie(movies: list) -> None:
         movie_rating = get_movie_rating(movie_data)
         movie_note = prompt_whether_movie_note()
         movie_poster = movie_data["Poster"]
-        if add_movie_to_db(movie_name, movie_year, movie_rating, movie_note, movie_poster):
+        movie_country = movie_data["Country"]
+        movie_imdbID = movie_data["imdbID"]
+        if add_movie_to_db(movie_name, movie_year, movie_rating, movie_note, movie_poster, movie_country, movie_imdbID):
             print("\n" + success(f"Movie '{movie_name}' successfully added"))
 
             return

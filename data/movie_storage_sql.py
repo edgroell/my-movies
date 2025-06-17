@@ -23,7 +23,9 @@ try:
                 year INTEGER NOT NULL,
                 rating REAL NOT NULL,
                 note TEXT NOT NULL,
-                poster TEXT UNIQUE NOT NULL
+                poster TEXT UNIQUE NOT NULL,
+                country TEXT NOT NULL,
+                imdbID TEXT UNIQUE NOT NULL
             )
         """))
         connection.commit()
@@ -43,13 +45,15 @@ def get_movies_from_db() -> list:
             "rating": 10,
             "note": "...",
             "poster": "https://..."
+            "country" : "United States",
+            "imdbID": "tt0268978"
           }
         },
         "..."
     ]
     """
     with engine.connect() as connection:
-        result = connection.execute(text("SELECT title, year, rating, note, poster FROM movies"))
+        result = connection.execute(text("SELECT title, year, rating, note, poster, country, imdbID FROM movies"))
         movies = result.fetchall()
 
     return [{
@@ -58,19 +62,23 @@ def get_movies_from_db() -> list:
             "year": row[1],
             "rating": row[2],
             "note": row[3],
-            "poster": row[4]
+            "poster": row[4],
+            "country": row[5],
+            "imdbID": row[6]
         }
     } for row in movies]
 
 
-def add_movie_to_db(title: str, year: int, rating: float, note: str, poster: str) -> bool:
+def add_movie_to_db(title: str, year: int, rating: float, note: str, poster: str, country: str, imdbID: str) -> bool:
     """
     Adds a movie to the database via SQL.
     :param title: str containing the title of the movie.
     :param year: int containing the year of the movie.
     :param rating: float containing the rating of the movie.
-    :param: note: str containing the note on the movie.
+    :param note: str containing the note on the movie.
     :param poster: str containing the poster image URL of the movie.
+    :param country: str containing the country(ies) of the movie.
+    :param imdbID: str containing the IMDb ID of the movie.
     :return: bool:
         True: if movie successfully added to database.
         False: if an error occurred.
@@ -78,14 +86,17 @@ def add_movie_to_db(title: str, year: int, rating: float, note: str, poster: str
     with engine.connect() as connection:
         try:
             connection.execute(text(
-                "INSERT INTO movies (title, year, rating, note, poster) "
-                "VALUES (:title, :year, :rating, :note, :poster)"),
+                "INSERT INTO movies (title, year, rating, note, poster, country, imdbID) "
+                "VALUES (:title, :year, :rating, :note, :poster, :country, :imdbID)"),
                                {
                                    "title": title,
                                    "year": year,
                                    "rating": rating,
                                    "note": note,
-                                   "poster": poster})
+                                   "poster": poster,
+                                   "country": country,
+                                   "imdbID": imdbID
+                               })
             connection.commit()
 
             return True

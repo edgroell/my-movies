@@ -6,7 +6,7 @@ import os
 import requests
 from dotenv import load_dotenv
 
-from utils.config import BASE_URL
+from utils.config import OMDB_BASE_URL
 
 load_dotenv()
 
@@ -28,7 +28,7 @@ def fetch_movie_data(title: str, plot="short", return_type="json"):
         "r": return_type,
     }
     try:
-        response = requests.get(BASE_URL, params=params, timeout=10)
+        response = requests.get(OMDB_BASE_URL, params=params, timeout=10)
         response.raise_for_status()
         movie_data = response.json()
 

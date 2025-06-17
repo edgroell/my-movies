@@ -59,7 +59,7 @@ def get_average_normalized_ratings(normalized_ratings_list: list) -> float:
 def get_movie_rating(movie_data: dict) -> float:
     """
     Extracts all ratings from the API into a list of strings.
-    :param movie_data: list: containing all movie data from the API.
+    :param movie_data: dict: containing all movie data from the API.
     :return: movie_rating: float: returns rounded average of normalized ratings.
     """
     ratings_list = []
@@ -74,6 +74,17 @@ def get_movie_rating(movie_data: dict) -> float:
         movie_rating = "N/A"
 
     return movie_rating
+
+
+def get_movie_countries(movie_data: dict) -> list:
+    """
+    Extracts all countries from the dictionary and returns a list of countries.
+    :param movie_data: dict: containing all movie data from the API.
+    :return: movie_country: list: contains all countries of the movie.
+    """
+    movie_country = movie_data["Country"].split(", ")
+
+    return movie_country
 
 
 def get_ratings_list(movies: list) -> list:
