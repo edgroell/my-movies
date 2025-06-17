@@ -14,7 +14,9 @@ To install this app, simply clone the repository and install the dependencies in
 ## Usage
 
 To use this app, run the following command `python my_movies.py`
-You'll be presented with a CLI menu including 12 options:
+> The app now supports multi-users with individual collection and website for each user, you'll first be prompted to select a user (you may Add, Delete, or Update a user)
+
+Once the user selected, you'll be presented with a CLI menu including 12 options:
 > 0. Exit >>> leave the program
 > 1. List Movies >>> Get a list of all the movies added to the collection with year of release and average rating
 > 2. Add Movie >>> Prompts you to enter a title and will fetch the corresponding data via OMDb database (https://www.omdbapi.com/)
