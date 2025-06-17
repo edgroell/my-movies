@@ -4,6 +4,8 @@ Module that contains all the functions to generate the HTML frontend.
 
 import os
 
+from utils.api_calls import get_country_flag
+from utils.helpers import get_movie_countries
 from utils.config import IMDB_BASE_URL
 
 def serialize_movie(movie: dict) -> str:
@@ -16,9 +18,16 @@ def serialize_movie(movie: dict) -> str:
     title = movie.get("title", "Name not found")
     year = movie["details"].get("year", "Year not found")
     rating = movie["details"].get("rating", "Rating not found")
+    movie_countries = get_movie_countries(movie)
+    if movie_countries[0] == "United States":
+        flag = get_country_flag("United States of America")
+    else:
+        flag = get_country_flag(movie_countries[0])
+
     if movie["details"].get("imdbID") == "N/A":
         link = None
-    link = f"{IMDB_BASE_URL}{movie["details"].get("imdbID")}"
+    else:
+        link = f"{IMDB_BASE_URL}{movie["details"].get("imdbID")}"
 
     if movie["details"].get("poster") == "N/A":
         poster = None
@@ -33,6 +42,7 @@ def serialize_movie(movie: dict) -> str:
                 <div class="movie-title">{title}</div>
                 <div class="movie-year">{year}</div>
                 <div class="movie-rating">{rating}</div>
+                <img src="{flag}" alt="Country Flag" class="movie-flag">
             </a>
         </li>
         """
@@ -46,6 +56,7 @@ def serialize_movie(movie: dict) -> str:
                 <div class="movie-year">{year}</div>
                 <div class="movie-rating">{rating}</div>
                 <div class="movie-note">{note}</div>
+                <img src="{flag}" alt="Country Flag" class="movie-flag">
             </a>
         </li>
         """

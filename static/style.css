@@ -105,3 +105,13 @@ body {
 .movie:hover .movie-note {
   display: block;
 }
+
+.movie-flag {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  width: 30px;
+  height: 20px;
+  border-radius: 2px;
+  z-index: 10;
+}

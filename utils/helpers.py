@@ -76,15 +76,15 @@ def get_movie_rating(movie_data: dict) -> float:
     return movie_rating
 
 
-def get_movie_countries(movie_data: dict) -> list:
+def get_movie_countries(movie: dict) -> list:
     """
     Extracts all countries from the dictionary and returns a list of countries.
-    :param movie_data: dict: containing all movie data from the API.
-    :return: movie_country: list: contains all countries of the movie.
+    :param movie: dict: containing all movie data from the API.
+    :return: movie_countries: list: contains all countries of the movie.
     """
-    movie_country = movie_data["Country"].split(", ")
+    movie_countries = movie["details"]["country"].split(", ")
 
-    return movie_country
+    return movie_countries
 
 
 def get_ratings_list(movies: list) -> list:

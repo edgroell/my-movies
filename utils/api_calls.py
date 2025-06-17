@@ -6,7 +6,10 @@ import os
 import requests
 from dotenv import load_dotenv
 
-from utils.config import OMDB_BASE_URL
+from utils.config import (
+    OMDB_BASE_URL,
+    FLAG_BASE_URL
+)
 
 load_dotenv()
 
@@ -37,4 +40,15 @@ def fetch_movie_data(title: str, plot="short", return_type="json"):
     except requests.exceptions.RequestException as e:
         print(f"An error with the API occurred: {e}")
 
+        return None
+
+
+def get_country_flag(country_name):
+    url = f"{FLAG_BASE_URL}{country_name}"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        return data[0]["flags"]["png"]
+    else:
         return None
