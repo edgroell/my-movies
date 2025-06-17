@@ -40,11 +40,11 @@ body {
 .movie-rating {
   position: absolute;
   bottom: 5px;
-  right: 5px;
+  left: 5px;
   background-color: rgba(0, 0, 0, 0.7);
   color: white;
   padding: 5px 10px;
-  border-radius: 20px;
+  border-radius: 5px;
   font-size: 0.9em;
   z-index: 10;
 }
@@ -73,8 +73,8 @@ body {
 .movie-year {
   font-size: 0.9em;
   color: #666;
-  margin-top: 5px;
-  margin-bottom: 15px;
+  margin-top: 2px;
+  margin-bottom: 14px;
 }
 
 .movie-poster {
@@ -108,10 +108,13 @@ body {
 
 .movie-flag {
   position: absolute;
-  bottom: 12px;
-  left: 12px;
+  bottom: 5px;
+  right: 5px;
+  border: 2px solid rgba(0, 0, 0, 0.7);
+  background-color: #e3e0e0;
+  padding: 5px 10px;
+  border-radius: 5px;
+  z-index: 10;
   width: 30px;
   height: 20px;
-  border-radius: 2px;
-  z-index: 10;
 }
