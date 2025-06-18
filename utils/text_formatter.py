@@ -12,6 +12,7 @@ formatting = {
     "reset": "\033[0m"
 }
 
+
 class TextFormatter:
     """ Class containing all functions to style the text from the CLI """
     @staticmethod

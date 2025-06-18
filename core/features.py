@@ -45,6 +45,7 @@ title = TextFormatter.title
 success = TextFormatter.success
 error = TextFormatter.error
 
+
 def list_movies(movies: list, current_user: str) -> None:
     """
     Prints the entire list of movies with corresponding info.
@@ -53,20 +54,27 @@ def list_movies(movies: list, current_user: str) -> None:
     :return: None
     """
     if len(movies) == 0:
-        print(title(f"No Movies") + ":")
+        print(title("No Movies") + ":")
+
     elif len(movies) == 1:
         print(title(f"{len(movies)} Movie") + ":")
+
     else:
         print(title(f"{len(movies)} Movies") + ":")
+
 
     if len(movies) == 0:
         print(f"No movies in your collection, {current_user}!\n"
               "You should add your favorite movies...")
+
     else:
         for movie in movies:
-            print(f">>> {movie["title"]} ({movie["details"]["year"]}): {movie["details"]["rating"]}")
+            print(f">>> {movie["title"]} ({movie["details"]["year"]}): "
+                  f"{movie["details"]["rating"]}")
+
             if not movie["details"]["note"] == "N/A":
                 print(f" 📝 {movie['details']['note']}")
+
             else:
                 print(" ❌ This movie has no attached note...")
 
@@ -80,12 +88,15 @@ def add_movie(movies: list, current_user: str) -> None:
     """
     print(title("Add Movie") + ":")
     movie_name = prompt_movie_name()
+
     if is_already_in_movie_database(movies, movie_name):
-        print("\n" + error(f"Sorry {current_user}, movie '{movie_name}' is already in your collection!"))
+        print("\n" + error(
+            f"Sorry {current_user}, movie '{movie_name}' is already in your collection!"))
 
         return
 
     movie_data = fetch_movie_data(movie_name)
+
     if movie_data is None:
 
         return
@@ -103,8 +114,10 @@ def add_movie(movies: list, current_user: str) -> None:
         movie_note = prompt_whether_movie_note()
         movie_poster = movie_data["Poster"]
         movie_country = movie_data["Country"]
-        movie_imdbID = movie_data["imdbID"]
-        if add_movie_to_db(user_id, movie_name, movie_year, movie_rating, movie_note, movie_poster, movie_country, movie_imdbID):
+        movie_imdb_id = movie_data["imdb_id"]
+
+        if add_movie_to_db(user_id, movie_name, movie_year, movie_rating,
+                           movie_note, movie_poster, movie_country, movie_imdb_id):
             print("\n" + success(f"Movie '{movie_name}' successfully added"))
 
             return
@@ -121,12 +134,14 @@ def delete_movie(movies: list, current_user: str) -> None:
     """
     print(title("Delete Movie") + ":")
     movie_name = prompt_movie_name()
+
     if not is_already_in_movie_database(movies, movie_name):
         print("\n" + error(f"Sorry {current_user}, movie '{movie_name}' is not in the database!"))
 
         return
 
     user_id = get_user_id(current_user)
+
     if delete_movie_from_db(user_id, movie_name):
         print("\n" + success(f"Movie '{movie_name}' successfully deleted"))
 
@@ -144,6 +159,7 @@ def update_movie(movies: list, current_user: str) -> None:
     """
     print(title("Update Movie") + ":")
     movie_name = prompt_movie_name()
+
     if not is_already_in_movie_database(movies, movie_name):
         print("\n" + error(f"Sorry {current_user}, movie '{movie_name}' is not in the database!"))
 
@@ -155,6 +171,7 @@ def update_movie(movies: list, current_user: str) -> None:
 
     user_id = get_user_id(current_user)
     movie_note = prompt_movie_note()
+
     if update_movie_from_db(user_id, movie_name, movie_note):
         print("\n" + success(f"Note successfully added to the movie '{movie_name}'"))
 
@@ -175,12 +192,15 @@ def list_stats(movies: list, current_user: str) -> None:
     print(">>> Median Rating: ", get_median_rating(movies))
     print(f">>> {current_user}'s Best Movie(s): ", end="")
     best_movies = get_best_movie(movies)
+
     for movie, rating in best_movies.items():
         print(f"{movie}: {rating}", end="    ")
     print(f"\n>>> {current_user}'s Worst Movie(s): ", end="")
     worst_movies = get_worst_movie(movies)
+
     for movie, rating in worst_movies.items():
         print(f"{movie}: {rating}", end="    ")
+
     print()
 
 
@@ -192,6 +212,7 @@ def get_random_movie(movies: list, current_user: str) -> None:
     :return: None
     """
     random_movie = random.choice(movies)
+
     print(title(f"{current_user}'s Random Movie") + ": ")
     print(f">>> {random_movie["title"]}, it's rated {random_movie["details"]["rating"]}")
 
@@ -206,9 +227,11 @@ def search_movie(movies: list,current_user: str) -> None:
     print(title("Search Movie") + ":")
     movie_name = prompt_movie_name()
     search_matching = {}
+
     for movie in movies:
         if movie_name.lower() in movie["title"].lower():
             search_matching[movie["title"]] = movie["details"]["rating"]
+
         else:
             distance = get_edit_distance(movie["title"].lower(), movie_name.lower())
             if distance <= 4:
@@ -231,12 +254,13 @@ def list_movies_sorted_by_rating(movies: list, current_user: str) -> None:
     :param current_user: str containing the current username.
     :return: None
     """
+    print(title(f"{current_user}'s Movies Sorted by Rating") + ":")
     movies_sorted_by_rating = sorted(
         movies,
         key=lambda item: (-item["details"]["rating"], item["title"]),
         reverse=False
     )
-    print(title(f"{current_user}'s Movies Sorted by Rating") + ":")
+
     for movie in movies_sorted_by_rating:
         print(f">>> {movie["title"]}: {movie["details"]["rating"]}")
 
@@ -261,6 +285,7 @@ def list_movies_sorted_by_year(movies: list, current_user: str) -> None:
         key=lambda item: (item["details"]["year"], item["title"]),
         reverse=False
     )
+
     print(title("\n" + f"{current_user}'s Movies Sorted by Year") + ":")
     if sorting_choice:
         for movie in movies_sorted_by_year_descending:
@@ -284,6 +309,7 @@ def filter_movies(movies: list, current_user: str) -> None:
     min_rating = prompt_min_rating()
     min_year = prompt_min_year()
     max_year = prompt_max_year()
+
     print(title("\n" + f"{current_user}'s Filtered Movies") + ":")
     for movie in movies:
         if (movie["details"]["rating"] >= min_rating and
@@ -303,6 +329,7 @@ def generate_website(movies: list, current_user: str) -> None:
     template_path = os.path.join("static", "index_template.html")
     page_template = open_template(template_path)
     final_page = inject_website_content(page_template, movies_cards)
+
     build_html_page(final_page, current_user)
 
     print(success(f"{current_user}'s Website successfully generated"))
@@ -316,6 +343,7 @@ def create_ratings_histogram(movies: list, current_user: str) -> None:
     :return: None
     """
     data = get_ratings_list(movies)
+
     plt.hist(data, bins=5, edgecolor="black", color="green", alpha=0.7)
     plt.title("My Movies' Ratings Histogram")
     plt.xlabel("Ratings")
@@ -324,6 +352,7 @@ def create_ratings_histogram(movies: list, current_user: str) -> None:
         os.makedirs("output")
 
     file_path = os.path.join("output", f"{current_user}_ratings_histogram.png")
+
     plt.savefig(file_path)
     plt.show()
     print(success(f"{current_user}'s Movies Ratings Histogram successfully generated"))

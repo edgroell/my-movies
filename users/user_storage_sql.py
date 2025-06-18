@@ -13,7 +13,6 @@ try:
     engine = create_engine(USER_DB_URL, echo=False)
 except Exception as e:
     print(f"Failed to create engine: {e}")
-    raise
 
 try:
     with engine.connect() as connection:

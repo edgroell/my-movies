@@ -4,6 +4,7 @@ Module containing all functions related to API interactions
 
 import os
 import requests
+
 from dotenv import load_dotenv
 
 from utils.config import (
@@ -14,6 +15,7 @@ from utils.config import (
 load_dotenv()
 
 api_key = os.getenv("API_KEY")
+
 
 def fetch_movie_data(title: str, plot="short", return_type="json"):
     """
@@ -30,6 +32,7 @@ def fetch_movie_data(title: str, plot="short", return_type="json"):
         "plot": plot,
         "r": return_type,
     }
+
     try:
         response = requests.get(OMDB_BASE_URL, params=params, timeout=10)
         response.raise_for_status()
@@ -43,12 +46,19 @@ def fetch_movie_data(title: str, plot="short", return_type="json"):
         return None
 
 
-def get_country_flag(country_name):
+def get_country_flag(country_name: str) -> str | None:
+    """
+    Returns the url to the flag of the given country.
+    :param country_name: str containing the country name.
+    :return:
+    """
     url = f"{FLAG_BASE_URL}{country_name}"
-    response = requests.get(url)
+    response = requests.get(url, timeout=10)
 
     if response.status_code == 200:
         data = response.json()
-        return data[0]["flags"]["png"]
-    else:
-        return None
+        flag = data[0]["flags"]["png"]
+
+        return flag
+
+    return None

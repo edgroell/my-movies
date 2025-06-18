@@ -2,8 +2,10 @@
 Module that contains all the helper functions.
 """
 
-import Levenshtein
 import statistics
+
+import Levenshtein
+
 
 def is_already_in_user_database(users: list, user_name: str) -> bool:
     """
@@ -20,6 +22,7 @@ def is_already_in_user_database(users: list, user_name: str) -> bool:
             return True
 
     return False
+
 
 def is_already_in_movie_database(movies: list, movie_name: str) -> bool:
     """
@@ -46,15 +49,21 @@ def normalize_all_ratings(ratings_list: list) -> list:
         (only floats) ratings from API data.
     """
     normalized_ratings_list = []
+
     for rating in ratings_list:
         if rating[-3:] == "/10":
             new_rating = float(rating[:-3]) * 10
+
             normalized_ratings_list.append(new_rating)
+
         elif rating[-4:] == "/100":
             new_rating = float(rating[:-4])
+
             normalized_ratings_list.append(new_rating)
+
         elif rating[-1:] == "%":
             new_rating = float(rating[:-1])
+
             normalized_ratings_list.append(new_rating)
 
     return normalized_ratings_list
@@ -80,12 +89,14 @@ def get_movie_rating(movie_data: dict) -> float:
     """
     ratings_list = []
     ratings = movie_data["Ratings"]
+
     for rating in ratings:
         ratings_list.append(rating["Value"])
 
     if ratings_list:
         normalized_ratings_list = normalize_all_ratings(ratings_list)
         movie_rating = get_average_normalized_ratings(normalized_ratings_list)
+
     else:
         movie_rating = "N/A"
 
@@ -110,11 +121,13 @@ def get_ratings_list(movies: list) -> list:
     :return: ratings_list: list containing all ratings.
     """
     ratings_list = []
+
     for movie in movies:
         try:
             ratings_list.append(float(movie["details"]["rating"]))
-        except ValueError:
-            pass
+
+        except ValueError as e:
+            print(f"Error: {e}")
 
     return ratings_list
 
@@ -151,6 +164,7 @@ def get_best_movie(movies: list) -> dict:
     """
     ratings_list = get_ratings_list(movies)
     best_movies = {}
+
     for movie in movies:
         if movie["details"]["rating"] == max(ratings_list):
             best_movies[movie["title"]] = movie["details"]["rating"]
@@ -166,6 +180,7 @@ def get_worst_movie(movies: list) -> dict:
     """
     ratings_list = get_ratings_list(movies)
     worst_movies = {}
+
     for movie in movies:
         if movie["details"]["rating"] == min(ratings_list):
             worst_movies[movie["title"]] = movie["details"]["rating"]

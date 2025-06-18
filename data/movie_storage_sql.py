@@ -26,7 +26,7 @@ try:
                 note TEXT NOT NULL,
                 poster TEXT NOT NULL,
                 country TEXT NOT NULL,
-                imdbID TEXT NOT NULL,
+                imdb_id TEXT NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users(id),
                 UNIQUE(user_id, imdbID)
             )
@@ -34,6 +34,7 @@ try:
         connection.commit()
 except Exception as e:
     print(f"Failed to create table: {e}")
+
 
 def get_movies_from_db(user_id: int) -> list:
     """
@@ -51,7 +52,7 @@ def get_movies_from_db(user_id: int) -> list:
                     "note": "Best Ever!",
                     "poster": "https://...",
                     "country": "United States",
-                    "imdbID": "tt0268978"
+                    "imdb_id": "tt0268978"
                 }
             },
             "..."
@@ -60,13 +61,8 @@ def get_movies_from_db(user_id: int) -> list:
     with engine.connect() as connection:
         result = connection.execute(text("""
             SELECT
-                movies.title,
-                movies.year,
-                movies.rating,
-                movies.note,
-                movies.poster,
-                movies.country,
-                movies.imdbID
+                movies.title, movies.year, movies.rating, movies.note,
+                movies.poster, movies.country, movies.imdbID
             FROM movies
             WHERE movies.user_id = :user_id
         """), {"user_id": user_id})
@@ -81,20 +77,14 @@ def get_movies_from_db(user_id: int) -> list:
             "note": row[3],
             "poster": row[4],
             "country": row[5],
-            "imdbID": row[6]
+            "imdb_id": row[6]
         }
     } for row in movies]
 
 
 def add_movie_to_db(
-    user_id: int,
-    title: str,
-    year: int,
-    rating: float,
-    note: str,
-    poster: str,
-    country: str,
-    imdbID: str) -> bool:
+    user_id: int, title: str, year: int, rating: float,
+    note: str, poster: str, country: str, imdb_id: str) -> bool:
     """
     Adds a movie to the database via SQL.
     :param user_id: int containing the user ID associated with the transaction.
@@ -104,7 +94,7 @@ def add_movie_to_db(
     :param note: str containing the note on the movie.
     :param poster: str containing the poster image URL of the movie.
     :param country: str containing the country(ies) of the movie.
-    :param imdbID: str containing the IMDb ID of the movie.
+    :param imdb_id: str containing the IMDb ID of the movie.
     :return: bool: True if movie successfully added to database, False otherwise.
     """
     with engine.connect() as connection:
@@ -112,23 +102,9 @@ def add_movie_to_db(
             connection.execute(
                 text(
                     "INSERT INTO movies ("
-                    "user_id, "
-                    "title, "
-                    "year, "
-                    "rating, "
-                    "note, "
-                    "poster, "
-                    "country, "
-                    "imdbID) "
+                    "user_id, title, year, rating, note, poster, country, imdb_id) "
                     "VALUES ("
-                    ":user_id, "
-                    ":title, "
-                    ":year, "
-                    ":rating, "
-                    ":note, "
-                    ":poster, "
-                    ":country, "
-                    ":imdbID)"
+                    ":user_id, :title, :year, :rating, :note, :poster, :country, :imdbID)"
                 ),
                 {
                     "user_id": user_id,
@@ -138,7 +114,7 @@ def add_movie_to_db(
                     "note": note,
                     "poster": poster,
                     "country": country,
-                    "imdbID": imdbID,
+                    "imdb_id": imdb_id,
                 },
             )
             connection.commit()

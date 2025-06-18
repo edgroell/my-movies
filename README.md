@@ -33,7 +33,7 @@ Once the user selected, you'll be presented with a CLI menu including 12 options
 
 ## Project Status
 
-Project is: _in progress_
+As of _18-JUN-2025_, project is: _in progress_
 
 ## Room for Improvement
 

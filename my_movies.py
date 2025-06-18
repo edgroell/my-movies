@@ -1,7 +1,7 @@
 """
 # My Movies
 # by Ed Groell
-# last update: 17-JUN-2025
+# last update: 18-JUN-2025
 """
 
 from core.features import (
@@ -38,6 +38,7 @@ from utils.user_prompts import (
 main_title = TextFormatter.main_title
 title = TextFormatter.title
 
+
 def display_header() -> None:
     """
     Prints the main header of the app.
@@ -64,6 +65,7 @@ def select_user() -> str | bool | None:
 
     while True:
         users = get_users_from_db()
+
         list_users(users)
         print("\n" + title("User Menu") + ":")
         for command in user_menu.values():
@@ -76,9 +78,12 @@ def select_user() -> str | bool | None:
             return False
 
         command = user_menu.get(user_choice)
+
         if user_choice == 1:
             current_user = command[1](users)
+
             if current_user is None:
+
                 continue
 
             if current_user:
@@ -87,6 +92,7 @@ def select_user() -> str | bool | None:
 
         if command and command[1]:
             result = command[1](users)
+
             if result is not None:
 
                 return result
@@ -114,7 +120,7 @@ def dispatch_menu(current_user: str) -> bool | None:
     while True:
         print(f"Hey {current_user} 👋 What can I do for you today?!")
         print("\n" + title("Main Menu") + ":")
-        for key, command in main_menu.items():
+        for command in main_menu.values():
             print(command[0])
 
         menu_choice = prompt_main_menu_choice()
@@ -125,13 +131,16 @@ def dispatch_menu(current_user: str) -> bool | None:
 
         if menu_choice == 13:
             new_user = select_user()
+
             if new_user:
                 current_user = new_user
+
                 continue
 
         user_id = get_user_id(current_user)
         movies = get_movies_from_db(user_id)
         command = main_menu.get(menu_choice)
+
         if command and command[1]:
             command[1](movies, current_user)
 

@@ -18,6 +18,7 @@ title = TextFormatter.title
 success = TextFormatter.success
 error = TextFormatter.error
 
+
 def list_users(users: list) -> None:
     """
     Prints the entire list of users.
@@ -25,14 +26,17 @@ def list_users(users: list) -> None:
     :return: None
     """
     if len(users) == 0:
-        print(title(f"No User") + ":")
+        print(title("No User") + ":")
+
     elif len(users) == 1:
         print(title(f"{len(users)} User") + ":")
+
     else:
         print(title(f"{len(users)} Users") + ":")
 
     if len(users) == 0:
         print("It's empty here - Start by adding a user!\n")
+
     else:
         for user in users:
             print(f">>> {user["name"]}")
@@ -47,10 +51,11 @@ def validate_user(users: list) -> str | None:
     print(title("Select User") + ":")
     while True:
         user_name = prompt_user_name()
+
         if user_name.lower() == "exit":
             print("\n****************************************\n")
 
-            break
+            return None
 
         if is_already_in_user_database(users, user_name):
             print("\n****************************************\n")
@@ -68,6 +73,7 @@ def add_user(users: list) -> None:
     """
     print(title("Add User") + ":")
     user_name = prompt_user_name()
+
     if is_already_in_user_database(users, user_name):
         print("\n" + error(f"Sorry, the user '{user_name}' already exists!"))
         print("\n****************************************\n")
@@ -92,6 +98,7 @@ def delete_user(users: list) -> None:
     """
     print(title("Delete User") + ":")
     user_name = prompt_user_name()
+
     if not is_already_in_user_database(users, user_name):
         print("\n" + error(f"Sorry, the user '{user_name}' doesn't exist!"))
         print("\n****************************************\n")
@@ -116,6 +123,7 @@ def update_user(users: list) -> None:
     """
     print(title("Update User") + ":")
     user_name = prompt_user_name()
+
     if not is_already_in_user_database(users, user_name):
         print("\n" + error(f"Sorry, the user '{user_name}' doesn't exist!"))
         print("\n****************************************\n")
@@ -123,6 +131,7 @@ def update_user(users: list) -> None:
         return
 
     new_user_name = prompt_new_user_name(users)
+
     if update_user_from_db(new_user_name, user_name):
         print("\n" + success(f"User successfully updated to '{new_user_name}'"))
         print("\n****************************************\n")
@@ -133,16 +142,19 @@ def update_user(users: list) -> None:
     print("\n****************************************\n")
 
 
-def get_user_id(current_user: str) -> int:
+def get_user_id(current_user: str) -> int | None:
     """
     Gets the user id for a given user.
     :param current_user: str containing the current username.
     :return: user_id: int containing the user id.
     """
     users = get_users_from_db()
+
     for user in users:
         if user["name"] == current_user:
             user_id = user["id"]
             if user_id:
 
                 return user_id
+
+    return None

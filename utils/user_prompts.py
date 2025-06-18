@@ -10,6 +10,7 @@ from utils.text_formatter import TextFormatter
 prompt = TextFormatter.prompt
 error = TextFormatter.error
 
+
 def prompt_user_menu_choice() -> int:
     """
     Prompts the user to enter a user menu choice.
@@ -19,6 +20,7 @@ def prompt_user_menu_choice() -> int:
         print("\n****************************************")
         user_menu_choice = input(prompt("Enter choice (0-4): ")).strip()
         print("****************************************\n")
+
         if user_menu_choice.isdigit() and 0 <= int(user_menu_choice) <= 4:
 
             return int(user_menu_choice)
@@ -33,6 +35,7 @@ def prompt_user_name():
     """
     while True:
         user_name = input(prompt("Enter a Username: ")).strip()
+
         if user_name:
 
             return user_name
@@ -48,8 +51,10 @@ def prompt_new_user_name(users: list):
     """
     while True:
         new_user_name = input(prompt("Enter NEW Username: ")).strip()
+
         if is_already_in_user_database(users, new_user_name):
             print(error(f"Sorry, the user '{new_user_name}' already exists!"))
+
         else:
             if new_user_name:
 
@@ -65,6 +70,7 @@ def prompt_main_menu_choice() -> int:
         print("\n****************************************")
         main_menu_choice = input(prompt("Enter choice (0-13): ")).strip()
         print("****************************************\n")
+
         if main_menu_choice.isdigit() and 0 <= int(main_menu_choice) <= 13:
 
             return int(main_menu_choice)
@@ -89,6 +95,7 @@ def prompt_movie_name() -> str:
     """
     while True:
         movie_name = input(prompt("Enter movie name: ")).strip()
+
         if movie_name:
 
             return movie_name
@@ -107,8 +114,13 @@ def prompt_movie_note() -> str:
 
 
 def prompt_whether_movie_note() -> str:
+    """
+    Prompts whether the user wants to add a note for the added movie.
+    :return: movie_note: str containing the movie note.
+    """
     while True:
         note_choice = input(prompt("Do you want to add a note (y/n): ")).strip().lower()
+
         if note_choice == "y":
             movie_note = prompt_movie_note()
 
@@ -168,6 +180,7 @@ def prompt_sorting_descending() -> bool:
     while True:
         sorting_choice = input(prompt(
             "Do you want the latest movies first? (y/n): ")).strip().lower()
+
         if sorting_choice == "y":
 
             return True
@@ -188,6 +201,7 @@ def prompt_min_rating() -> int | float:
     """
     while True:
         min_rating = input(prompt("Enter minimum rating (leave blank for no min rating): ")).strip()
+
         if not min_rating:
 
             return 0
@@ -197,6 +211,7 @@ def prompt_min_rating() -> int | float:
                 min_rating = min_rating.replace(",", ".")
 
             min_rating_float = float(min_rating)
+
             if 0 <= min_rating_float <= 100:
 
                 return min_rating_float
@@ -216,6 +231,7 @@ def prompt_min_year() -> int:
     """
     while True:
         min_year = input(prompt("Enter start year (leave blank for no start year): ")).strip()
+
         if not min_year:
 
             return 0
@@ -241,6 +257,7 @@ def prompt_max_year() -> int:
         try:
             max_year = input(prompt("Enter end year (leave blank for no end year): ")).strip()
             current_year = datetime.now().year
+
             if not max_year:
 
                 return current_year

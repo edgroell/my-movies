@@ -5,32 +5,36 @@ Module that contains all the functions to generate the HTML frontend.
 import os
 
 from utils.api_calls import get_country_flag
-from utils.helpers import get_movie_countries
 from utils.config import IMDB_BASE_URL
+from utils.helpers import get_movie_countries
+
 
 def serialize_movie(movie: dict) -> str:
     """
     Builds the entire string in HTML format for the given movie.
-
-    :param movie: dict containing all data from the given movie.
-    :return: str containing all info of the given movie in HTML format.
+    :param movie: dict containing all data of the movie.
+    :return: str containing all the code in HTML format.
     """
     title = movie.get("title", "Name not found")
     year = movie["details"].get("year", "Year not found")
     rating = movie["details"].get("rating", "Rating not found")
     movie_countries = get_movie_countries(movie)
+
     if movie_countries[0] == "United States":
         flag = get_country_flag("United States of America")
+
     else:
         flag = get_country_flag(movie_countries[0])
 
-    if movie["details"].get("imdbID") == "N/A":
+    if movie["details"].get("imdb_id") == "N/A":
         link = None
+
     else:
-        link = f"{IMDB_BASE_URL}{movie["details"].get("imdbID")}"
+        link = f"{IMDB_BASE_URL}{movie["details"].get("imdb_id")}"
 
     if movie["details"].get("poster") == "N/A":
         poster = None
+
     else:
         poster = movie["details"].get("poster")
 
@@ -46,6 +50,7 @@ def serialize_movie(movie: dict) -> str:
             </a>
         </li>
         """
+
     else:
         note = movie["details"].get("note")
         movie_card = f"""
