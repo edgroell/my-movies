@@ -104,7 +104,7 @@ def add_movie_to_db(
                     "INSERT INTO movies ("
                     "user_id, title, year, rating, note, poster, country, imdb_id) "
                     "VALUES ("
-                    ":user_id, :title, :year, :rating, :note, :poster, :country, :imdbID)"
+                    ":user_id, :title, :year, :rating, :note, :poster, :country, :imdb_id)"
                 ),
                 {
                     "user_id": user_id,

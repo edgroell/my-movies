@@ -114,7 +114,7 @@ def add_movie(movies: list, current_user: str) -> None:
         movie_note = prompt_whether_movie_note()
         movie_poster = movie_data["Poster"]
         movie_country = movie_data["Country"]
-        movie_imdb_id = movie_data["imdb_id"]
+        movie_imdb_id = movie_data["imdbID"]
 
         if add_movie_to_db(user_id, movie_name, movie_year, movie_rating,
                            movie_note, movie_poster, movie_country, movie_imdb_id):
