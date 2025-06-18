@@ -130,7 +130,7 @@ def prompt_whether_movie_note() -> str:
 
             return "N/A"
 
-        print("\n" + error("Please enter a valid answer (y/n)!\n"))
+        print(error("Please enter a valid answer (y/n)!"))
 
 
 # def prompt_movie_rating() -> float:
