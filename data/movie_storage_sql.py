@@ -28,7 +28,7 @@ try:
                 country TEXT NOT NULL,
                 imdb_id TEXT NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users(id),
-                UNIQUE(user_id, imdbID)
+                UNIQUE(user_id, imdb_id)
             )
         """))
         connection.commit()
@@ -62,7 +62,7 @@ def get_movies_from_db(user_id: int) -> list:
         result = connection.execute(text("""
             SELECT
                 movies.title, movies.year, movies.rating, movies.note,
-                movies.poster, movies.country, movies.imdbID
+                movies.poster, movies.country, movies.imdb_id
             FROM movies
             WHERE movies.user_id = :user_id
         """), {"user_id": user_id})
