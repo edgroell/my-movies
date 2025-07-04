@@ -116,6 +116,7 @@ class DataManager:
                 new_movie = Movie(
                     user_id=user_id,
                     title=new_movie_data['Title'],
+                    director=new_movie_data['Director'],
                     year=int(new_movie_data['Year']),
                     rating=rating_value,
                     country=new_movie_data['Country'],

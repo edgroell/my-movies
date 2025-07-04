@@ -66,6 +66,7 @@ def update_user_details(user_id):
     Handles updating a user's username.
     """
     user = data_manager.get_user_by_id(user_id)
+    username = user.username
     if not user:
         flash(f"User with ID {user_id} not found!", 'error')
         return redirect(url_for('home'))
@@ -78,7 +79,7 @@ def update_user_details(user_id):
     try:
         updated_user = data_manager.update_user(user_id, new_username)
         if updated_user:
-            flash(f"User '{user.username}' updated to '{updated_user.username}' successfully!", 'success')
+            flash(f"User '{username}' updated to '{updated_user.username}' successfully!", 'success')
         else:
             flash(f"Could not update user with ID {user_id}.", 'error')
     except ValueError as e:
