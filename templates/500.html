@@ -1,0 +1,22 @@
+<!-- templates/500.html -->
+
+{% extends "base.html" %}
+
+{% block title %}Server Error{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="error-page-content" style="text-align: center; padding: 4rem 2rem;">
+        <h1 class="section-title" style="font-size: 6rem; margin-bottom: 0;">500</h1>
+        <h2 class="page-title" style="text-align: center; font-size: 2rem; margin-top: 0; margin-bottom: 2rem;">Something Went Wrong</h2>
+        <p class="section-description">
+            We're experiencing an internal server error. Our team has been notified.
+            <br>
+            Please try again later.
+        </p>
+        <a href="{{ url_for('home') }}" class="change-user-button" style="padding: 0.8rem 1.5rem; font-size: 1rem;">
+            Go Back Home
+        </a>
+    </div>
+</div>
+{% endblock %}

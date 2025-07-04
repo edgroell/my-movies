@@ -201,6 +201,7 @@ body {
     font-size: 0.95rem;
     font-weight: 500;
     border: 1px solid;
+    text-align: center;
 }
 
 .message-success {
@@ -259,6 +260,12 @@ body {
     color: var(--secondary-black);
     padding-right: 1rem;
     transition: color 0.2s ease;
+}
+
+.list-item-text {
+    font-size: 1.1rem;
+    font-weight: 600; /* This is the semi-bold weight */
+    color: var(--secondary-black);
 }
 
 .user-actions {

@@ -211,6 +211,34 @@ def delete_movie(user_id, movie_id):
     return redirect(url_for('user_movies', user_id=user_id))
 
 
+# -----------------------------------------------------
+# Error Handlers
+# -----------------------------------------------------
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    """
+    Handles 404 errors (Page Not Found).
+    Renders a custom 404 page and returns the 404 status code.
+    The 'e' parameter is the error object, which is required by Flask.
+    """
+    # Note: We are explicitly returning the 404 status code.
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    """
+    Handles 500 errors (Internal Server Error).
+    This is triggered by unhandled exceptions in your code.
+    Renders a custom 500 page and returns the 500 status code.
+    """
+    # It's a good practice to also log the actual error to your console or a file
+    # for debugging purposes.
+    print(f"An internal server error occurred: {e}")
+    return render_template('500.html'), 500
+
+
 if __name__ == '__main__':
   with app.app_context():
     db.create_all()

@@ -40,6 +40,12 @@ As of _18-JUN-2025_, project is: _in progress_
 > - A list of movies could be provided to the user instead of "guessing" which are available
 > - More data could be provided in the final HTML page
 > - A GUI could be introduced next
+> 
+> - List of KPIs
+> - Random Movie or AI recommendation
+> - Search function
+> - Sorting
+> - Filter
 
 ## Acknowledgements
 
