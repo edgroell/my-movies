@@ -2,23 +2,30 @@
 Module that serves as Data Access Layer
 """
 
-from data_models import db, User, Movie
-from sqlalchemy.exc import IntegrityError, OperationalError
+from ..services.omdb_service import OMDBService
+from .data_models import db, User, Movie
+from sqlalchemy.exc import IntegrityError
 
-class DataManager():
-    def get_users(self):
+omdb_service = OMDBService()
+
+class DataManager:
+    @staticmethod
+    def get_users():
         """Fetches all users. Returns an empty list if none found."""
         return User.query.all()
 
-    def get_user_by_id(self, user_id):
+    @staticmethod
+    def get_user_by_id(user_id):
         """Fetches a user by ID. Returns None if not found."""
         return User.query.get(user_id)
 
-    def get_user_by_username(self, username):
+    @staticmethod
+    def get_user_by_username(username):
         """Fetches a user by username. Returns None if not found."""
         return User.query.filter_by(username=username).first()
 
-    def create_user(self, username):
+    @staticmethod
+    def create_user(username):
         """
         Creates a new user.
         Raises IntegrityError if username already exists (due to unique constraint).
@@ -81,29 +88,41 @@ class DataManager():
             raise RuntimeError(f"Failed to delete user {user_id}: {e}")
 
 
-    def get_movies(self, user_id):
+    @staticmethod
+    def get_movies(user_id):
         """Fetches all movies for a given user. Returns an empty list if none found."""
         return Movie.query.filter_by(user_id=user_id).all()
 
-    def add_movie(self, user_id, title, year, rating, country, poster_url, imdb_id, note):
+    def add_movie(self, user_id, movie):
         """
-        Adds a new movie.
+        Adds a new movie by fetching all data from the OMDb API.
         Returns the new Movie object on success.
         """
         try:
             if not self.get_user_by_id(user_id):
                 raise ValueError(f"User with ID {user_id} does not exist. No movie for ghosts!")
 
-            new_movie = Movie(user_id=user_id, title=title, year=year, rating=rating,
-                              country=country, poster_url=poster_url, imdb_id=imdb_id, note=note)
-            db.session.add(new_movie)
-            db.session.commit()
-            return new_movie
+            new_movie_data = omdb_service.get_movie_details(movie)
+            if new_movie_data:
+                new_movie = Movie(
+                    user_id=user_id,
+                    title=new_movie_data['Title'],
+                    year=new_movie_data['Year'],
+                    rating=new_movie_data['imdbRating'],
+                    country=new_movie_data['Country'],
+                    poster_url=new_movie_data['Poster'],
+                    imdb_id=new_movie_data['imdbID'],
+                    note='N/A')
+                db.session.add(new_movie)
+                db.session.commit()
+                return new_movie
         except Exception as e:
             db.session.rollback()
             raise RuntimeError(f"Failed to add movie: {e}")
 
-    def update_movie(self, movie_id, **kwargs):
+
+    @staticmethod
+    def update_movie(movie_id, **kwargs):
         """
         Updates a movie's attributes.
         Returns the updated Movie object, or None if movie not found.
@@ -125,7 +144,8 @@ class DataManager():
             db.session.rollback()
             raise RuntimeError(f"Failed to update movie {movie_id}: {e}")
 
-    def delete_movie(self, movie_id):
+    @staticmethod
+    def delete_movie(movie_id):
         """
         Deletes a movie by ID.
         Returns True on success, False if movie not found.

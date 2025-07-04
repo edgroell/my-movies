@@ -19,7 +19,7 @@ class Movie(db.Model):
     """ Contains all instances of movies """
     __tablename__ = 'movies'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     title = db.Column(db.String(100), nullable=False)
     year = db.Column(db.Integer, nullable=False)
     rating = db.Column(db.Float, nullable=False)
