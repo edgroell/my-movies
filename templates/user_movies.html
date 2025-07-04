@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Movies - {{ user.username }}'s Movies</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        <h1 class="page-title">{{ user.username }}'s Movies</h1>
+        <p class="text-center text-gray-600 mb-8">Welcome, {{ user.username }}! Here are your movie treasures.</p>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="message-box section-separator">
+                    {% for category, message in messages %}
+                        <p class="
+                            {% if category == 'success' %}message-success
+                            {% elif category == 'error' %}message-error
+                            {% else %}message-info
+                            {% endif %}
+                        ">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Add New Movie Form -->
+        <div class="add-user-form section-separator"> <!-- Reusing add-user-form class for styling consistency -->
+            <h2 class="section-title form-title">Add New Movie</h2>
+            <form action="{{ url_for('user_movies', user_id=user.id) }}" method="POST" class="form-layout">
+                <div class="form-group">
+                    <label for="movie_title" class="form-label">Movie Title (from OMDb)</label>
+                    <input type="text" id="movie_title" name="movie_title" required
+                           class="form-input">
+                </div>
+                <button type="submit" class="submit-button">
+                    Add Movie
+                </button>
+            </form>
+        </div>
+
+        <!-- Movie List Display -->
+        <div class="user-list-section"> <!-- Reusing user-list-section for styling consistency -->
+            <h2 class="section-title">Your Movies</h2>
+            <div class="user-list-container">
+                {% if movies %}
+                    <ul class="user-list">
+                        {% for movie in movies %}
+                            <li class="list-item movie-item">
+                                <div class="movie-details">
+                                    <span class="list-item-text">{{ movie.title }} ({{ movie.year }}) - Rating: {{ movie.rating }}</span>
+                                    <p class="movie-note text-gray-600 text-sm mt-1">Note: {{ movie.note }}</p>
+                                    <p class="movie-imdb-id text-gray-500 text-xs">IMDb ID: {{ movie.imdb_id }}</p>
+                                </div>
+                                <div class="movie-actions">
+                                    <!-- Update Form (can be simplified or a modal later) -->
+                                    <form action="{{ url_for('update_movie', user_id=user.id, movie_id=movie.id) }}" method="POST" class="inline-form">
+                                        <input type="text" name="new_title" placeholder="New Title" class="form-input-small">
+                                        <input type="text" name="new_note" placeholder="New Note" class="form-input-small">
+                                        <button type="submit" class="action-button update-button">Update</button>
+                                    </form>
+                                    <!-- Delete Form -->
+                                    <form action="{{ url_for('delete_movie', user_id=user.id, movie_id=movie.id) }}" method="POST" class="inline-form ml-2">
+                                        <button type="submit" class="action-button delete-button">Delete</button>
+                                    </form>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="no-users-message">No movies found for {{ user.username }}. Add one above!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

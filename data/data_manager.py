@@ -2,7 +2,7 @@
 Module that serves as Data Access Layer
 """
 
-from ..services.omdb_service import OMDBService
+from services.omdb_service import OMDBService
 from .data_models import db, User, Movie
 from sqlalchemy.exc import IntegrityError
 
@@ -104,11 +104,15 @@ class DataManager:
 
             new_movie_data = omdb_service.get_movie_details(movie)
             if new_movie_data:
+                try:
+                    rating_value = float(new_movie_data.get('imdbRating'))
+                except ValueError:
+                    rating_value = 0.0
                 new_movie = Movie(
                     user_id=user_id,
                     title=new_movie_data['Title'],
-                    year=new_movie_data['Year'],
-                    rating=new_movie_data['imdbRating'],
+                    year=int(new_movie_data['Year']),
+                    rating=rating_value,
                     country=new_movie_data['Country'],
                     poster_url=new_movie_data['Poster'],
                     imdb_id=new_movie_data['imdbID'],

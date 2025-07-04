@@ -6,14 +6,17 @@ Latest: 04-JUL-2025
 
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for, flash
 from data.data_manager import DataManager
-from data.data_models import db, Movie
+from data.data_models import db, User, Movie
 
 app = Flask(__name__)
 
+# TODO: IMPORTANT: Replace this with a strong, random key in production!
+app.secret_key = 'a_very_secret_key'
+
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'my_movies.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data', 'my_movies.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
@@ -22,21 +25,145 @@ data_manager = DataManager()
 
 
 @app.route('/')
-def index():
+def home():
+    """
+    Fetches all users from the database and renders the index.html template.
+    This serves as the main user list page.
+    """
     users = data_manager.get_users()
     return render_template('index.html', users=users)
 
 
 @app.route('/users', methods=['POST'])
+def create_user():
+    """
+    Handles the POST request from the 'Add New User' form.
+    Creates a new user, flashes messages, and redirects back to the user list.
+    """
+    username = request.form.get('username')
+
+    if not username:
+        flash('Username cannot be empty!', 'error')
+        return redirect(url_for('home')) # Changed to 'home' as it's the new index
+
+    try:
+        data_manager.create_user(username)
+        flash(f"User '{username}' added successfully!", 'success')
+    except ValueError as e:
+        flash(f"Error: {e}", 'error')
+    except RuntimeError as e:
+        flash(f"An unexpected database error occurred: {e}", 'error')
+    except Exception as e:
+        flash(f"An unknown error occurred: {e}", 'error')
+
+    return redirect(url_for('home')) # Changed to 'home'
+
 
 @app.route('/users/<int:user_id>/movies', methods=['GET', 'POST'])
+def user_movies(user_id):
+    """
+    Handles listing movies for a specific user (GET) and adding a new movie (POST).
+    """
+    user = data_manager.get_user_by_id(user_id)
+    if not user:
+        flash(f"User with ID {user_id} not found!", 'error')
+        return redirect(url_for('home'))
+
+    if request.method == 'POST':
+        # Logic for adding a new movie
+        movie_title = request.form.get('movie_title')
+        if not movie_title:
+            flash('Movie title cannot be empty!', 'error')
+            return redirect(url_for('user_movies', user_id=user_id))
+
+        try:
+            # data_manager.add_movie expects a title, not a full movie object, for OMDb lookup
+            new_movie = data_manager.add_movie(user_id, movie_title)
+            if new_movie:
+                flash(f"Movie '{new_movie.title}' added successfully for {user.username}!", 'success')
+            else:
+                flash(f"Could not find movie '{movie_title}' on OMDb or failed to add.", 'error')
+        except ValueError as e: # Catching specific errors from data_manager
+            flash(f"Error: {e}", 'error')
+        except RuntimeError as e:
+            flash(f"An unexpected error occurred while adding movie: {e}", 'error')
+        except Exception as e:
+            flash(f"An unknown error occurred: {e}", 'error')
+
+        return redirect(url_for('user_movies', user_id=user_id))
+    else: # GET request
+        movies = data_manager.get_movies(user_id)
+        return render_template('user_movies.html', user=user, movies=movies)
+
 
 @app.route('/users/<int:user_id>/movies/<int:movie_id>/update', methods=['POST'])
+def update_movie(user_id, movie_id):
+    """
+    Handles updating a specific movie for a user.
+    """
+    # Ensure the user exists
+    user = data_manager.get_user_by_id(user_id)
+    if not user:
+        flash(f"User with ID {user_id} not found!", 'error')
+        return redirect(url_for('home'))
+
+    # Get updated data from the form (e.g., new_title, new_note)
+    new_title = request.form.get('new_title')
+    new_note = request.form.get('new_note')
+    # You might want to fetch other fields like year, rating if they are editable
+
+    update_kwargs = {}
+    if new_title:
+        update_kwargs['title'] = new_title
+    if new_note:
+        update_kwargs['note'] = new_note
+    # Add other fields to update_kwargs as needed
+
+    if not update_kwargs:
+        flash("No update data provided!", 'info')
+        return redirect(url_for('user_movies', user_id=user_id))
+
+    try:
+        updated_movie = data_manager.update_movie(movie_id, **update_kwargs)
+        if updated_movie:
+            flash(f"Movie '{updated_movie.title}' updated successfully!", 'success')
+        else:
+            flash(f"Movie with ID {movie_id} not found or could not be updated.", 'error')
+    except RuntimeError as e:
+        flash(f"An error occurred while updating movie: {e}", 'error')
+    except Exception as e:
+        flash(f"An unknown error occurred: {e}", 'error')
+
+    return redirect(url_for('user_movies', user_id=user_id))
+
 
 @app.route('/users/<int:user_id>/movies/<int:movie_id>/delete', methods=['POST'])
+def delete_movie(user_id, movie_id):
+    """
+    Handles deleting a specific movie for a user.
+    """
+    # Ensure the user exists
+    user = data_manager.get_user_by_id(user_id)
+    if not user:
+        flash(f"User with ID {user_id} not found!", 'error')
+        return redirect(url_for('home'))
+
+    try:
+        success = data_manager.delete_movie(movie_id)
+        if success:
+            flash(f"Movie with ID {movie_id} deleted successfully!", 'success')
+        else:
+            flash(f"Movie with ID {movie_id} not found or could not be deleted.", 'error')
+    except RuntimeError as e:
+        flash(f"An error occurred while deleting movie: {e}", 'error')
+    except Exception as e:
+        flash(f"An unknown error occurred: {e}", 'error')
+
+    return redirect(url_for('user_movies', user_id=user_id))
+
 
 if __name__ == '__main__':
   with app.app_context():
     db.create_all()
 
-  app.run()
+  app.run(debug=True)

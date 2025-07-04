@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Movies</title>
+    <!-- Removed Tailwind CSS CDN -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        <h1 class="page-title">My Movies</h1>
+
+        <!-- User List Display -->
+        <div class="user-list-section section-separator">
+            <h2 class="section-title">Existing Users</h2>
+            <div class="user-list-container">
+                <!-- Jinja2 loop to display users passed from the Flask backend -->
+                {% if users %}
+                    <ul class="user-list">
+                        {% for user in users %}
+                            <li class="list-item">
+                                <span class="list-item-text">{{ user.username }} (ID: {{ user.id }})</span>
+                                <!-- Add buttons for update/delete later if needed -->
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="no-users-message">No users found. Be the first to create one!</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Add New User Form -->
+        <div class="add-user-form">
+            <h2 class="section-title form-title">Add New User</h2>
+            <form action="{{ url_for('create_user') }}" method="POST" class="form-layout">
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" name="username" required
+                           class="form-input">
+                </div>
+                <button type="submit" class="submit-button">
+                    Add User
+                </button>
+                <!-- Display messages from Flask's flash system -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="message-box">
+                            {% for category, message in messages %}
+                                <p class="
+                                    {% if category == 'success' %}message-success
+                                    {% elif category == 'error' %}message-error
+                                    {% else %}message-info
+                                    {% endif %}
+                                ">{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            </form>
+        </div>
+
+    </div>
+</body>
+</html>

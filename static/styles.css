@@ -1,0 +1,201 @@
+/* static/styles.css */
+
+/* Base Styles */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 2rem;
+    -webkit-font-smoothing: antialiased; /* Replicates Tailwind's antialiased */
+    -moz-osx-font-smoothing: grayscale; /* Replicates Tailwind's antialiased */
+}
+
+/* Main Container */
+.main-container {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1.5rem; /* p-6 in Tailwind is 1.5rem */
+    background-color: #ffffff; /* bg-white */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+    max-width: 42rem; /* max-w-2xl (approx 672px, adjust if needed for exact match) */
+    width: 100%; /* w-full */
+}
+
+/* Page Title */
+.page-title {
+    font-size: 2.25rem; /* text-4xl */
+    font-weight: 800; /* font-extrabold */
+    color: #1a202c; /* text-gray-900 */
+    margin-bottom: 2rem; /* mb-8 */
+    text-align: center;
+}
+
+/* Section Separator (for spacing between major divs) */
+.section-separator {
+    margin-bottom: 2.5rem; /* mb-10 */
+}
+
+/* Add New User Form Section */
+.add-user-form {
+    margin-bottom: 2.5rem; /* mb-10 */
+    padding: 1.5rem; /* p-6 */
+    background-color: #eff6ff; /* bg-blue-50 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+}
+
+/* Form Title (used for both sections) */
+.section-title {
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: 700; /* font-bold */
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+.add-user-form .section-title {
+    color: #1e40af; /* text-blue-800 */
+}
+
+/* Form Layout */
+.form-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* space-y-4 */
+}
+
+/* Form Group */
+.form-group {
+    /* No specific styles needed here if children handle their own layout */
+}
+
+/* Form Label */
+.form-label {
+    display: block;
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500; /* font-medium */
+    color: #4a5568; /* text-gray-700 */
+}
+
+/* Form Input */
+.form-input {
+    margin-top: 0.25rem; /* mt-1 */
+    display: block;
+    width: 100%; /* w-full */
+    padding: 0.5rem 1rem; /* px-4 py-2 */
+    border-width: 1px; /* border */
+    border-color: #d2d6dc; /* border-gray-300 */
+    border-radius: 0.375rem; /* rounded-md */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+    font-size: 0.875rem; /* sm:text-sm */
+    /* Focus styles */
+    outline: none; /* remove default outline */
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-input:focus {
+    border-color: #3b82f6; /* focus:border-blue-500 */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* focus:ring-blue-500 */
+}
+
+
+/* Submit Button */
+.submit-button {
+    width: 100%; /* w-full */
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 1rem; /* py-2 px-4 */
+    border-width: 1px; /* border */
+    border-color: transparent; /* border-transparent */
+    border-radius: 0.375rem; /* rounded-md */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+    font-size: 1.125rem; /* text-lg */
+    font-weight: 500; /* font-medium */
+    color: #ffffff; /* text-white */
+    background-color: #2563eb; /* bg-blue-600 */
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter, -moz-backdrop-filter, backdrop-filter; /* transition */
+    transition-duration: 150ms; /* duration-150 */
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); /* ease-in-out */
+    cursor: pointer;
+    outline: none; /* focus:outline-none */
+}
+
+.submit-button:hover {
+    background-color: #1d4ed8; /* hover:bg-blue-700 */
+}
+
+.submit-button:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5), 0 0 0 6px rgba(59, 130, 246, 0.25); /* focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 */
+}
+
+/* Message Box for Flash Messages */
+.message-box {
+    margin-top: 0.75rem; /* mt-3 */
+    text-align: center;
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500; /* font-medium */
+}
+
+.message-success {
+    color: #16a34a; /* text-green-600 */
+}
+
+.message-error {
+    color: #dc2626; /* text-red-600 */
+}
+
+.message-info {
+    color: #4a5568; /* text-gray-600 */
+}
+
+
+/* User List Display Section */
+.user-list-section {
+    padding: 1.5rem; /* p-6 */
+    background-color: #f7fafc; /* bg-gray-50 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+}
+
+.user-list-section .section-title {
+    color: #2d3748; /* text-gray-800 */
+}
+
+.user-list-container {
+    margin-top: 1rem; /* mt-4 */
+}
+
+.loading-message,
+.no-users-message {
+    text-align: center;
+    color: #718096; /* text-gray-500 */
+}
+
+/* User List */
+.user-list {
+    list-style: none; /* Remove default list bullets */
+    padding: 0;
+    margin: 0;
+    /* Tailwind's divide-y effect */
+    border-top: 1px solid #e2e8f0; /* top border for the first item */
+}
+
+.user-list .list-item:not(:last-child) {
+    border-bottom: 1px solid #e2e8f0; /* divide-y */
+}
+
+.list-item {
+    padding-top: 0.75rem; /* py-3 */
+    padding-bottom: 0.75rem; /* py-3 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-item-text {
+    font-size: 1.125rem; /* text-lg */
+    font-weight: 500; /* font-medium */
+    color: #1a202c; /* text-gray-900 */
+}
