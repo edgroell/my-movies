@@ -7,6 +7,8 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 class User(db.Model):
+    """ Contains all instances of users """
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
 
@@ -14,6 +16,8 @@ class User(db.Model):
         return self.username
 
 class Movie(db.Model):
+    """ Contains all instances of movies """
+    __tablename__ = 'movies'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     title = db.Column(db.String(100), nullable=False)
