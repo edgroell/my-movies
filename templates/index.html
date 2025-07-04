@@ -1,80 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Movies</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>">
-</head>
-<body>
-    <header class="top-banner">
-        <h1 class="app-name">My Movies</h1>
-    </header>
+{% extends "base.html" %}
 
-    <div class="main-content-wrapper">
-        <div class="main-container">
+{% block title %}Home{% endblock %}
 
-            <div class="user-list-section section-separator">
-                <h2 class="section-title">Existing Users</h2>
-                <div class="user-list-container">
-                    {% if users %}
-                        <ul class="user-list">
-                            {% for user in users %}
-                                <li class="list-item user-item-actions">
-                                    <a href="{{ url_for('user_movies', user_id=user.id) }}" class="user-link">
-                                        <span class="list-item-text">➡️ {{ user.username }}'s Movies 📽️</span>
-                                    </a>
-                                    <div class="user-actions">
-                                        <form action="{{ url_for('update_user_details', user_id=user.id) }}" method="POST" class="inline-form">
-                                            <input type="text" name="new_username" placeholder="New Username" class="form-input-small" required>
-                                            <button type="submit" class="action-button update-button">Update</button>
-                                        </form>
-                                        <form action="{{ url_for('delete_user', user_id=user.id) }}" method="POST" class="inline-form delete-form-margin">
-                                            <button type="submit" class="action-button delete-button">Delete</button>
-                                        </form>
-                                    </div>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p class="no-users-message">No users found. Be the first to create one!</p>
-                    {% endif %}
-                </div>
-            </div>
+{% block content %}
+<div class="main-container">
 
-            <div class="add-user-form">
-                <h2 class="section-title form-title">Add New User</h2>
-                <form action="{{ url_for('create_user') }}" method="POST" class="form-layout">
-                    <div class="form-group">
-                        <input type="text" id="username" name="username" placeholder="Enter Username" required
-                               class="form-input">
-                    </div>
-                    <button type="submit" class="submit-button">
-                        Add User
-                    </button>
-                    {% with messages = get_flashed_messages(with_categories=true) %}
-                        {% if messages %}
-                            <div class="message-box">
-                                {% for category, message in messages %}
-                                    <p class="
-                                        {% if category == 'success' %}message-success
-                                        {% elif category == 'error' %}message-error
-                                        {% else %}message-info
-                                        {% endif %}
-                                    ">{{ message }}</p>
-                                {% endfor %}
+    <div class="user-list-section section-separator">
+        <h2 class="section-title">Existing Users</h2>
+        <div class="user-list-container">
+            {% if users %}
+                <ul class="user-list">
+                    {% for user in users %}
+                        <li class="list-item user-item-actions">
+                            <a href="{{ url_for('user_movies', user_id=user.id) }}" class="user-link">
+                                <span class="list-item-text">➡️ {{ user.username }}'s Movies 📽️</span>
+                            </a>
+                            <div class="user-actions">
+                                <form action="{{ url_for('update_user_details', user_id=user.id) }}" method="POST" class="inline-form">
+                                    <input type="text" name="new_username" placeholder="New Username" class="form-input-small" required>
+                                    <button type="submit" class="action-button update-button">Update</button>
+                                </form>
+                                <form action="{{ url_for('delete_user', user_id=user.id) }}" method="POST" class="inline-form delete-form-margin">
+                                    <button type="submit" class="action-button delete-button">Delete</button>
+                                </form>
                             </div>
-                        {% endif %}
-                    {% endwith %}
-                </form>
-            </div>
-
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="no-users-message">No users found. Be the first to create one!</p>
+            {% endif %}
         </div>
     </div>
-    <footer class="site-footer">
-        <p>&copy; My Movies App. All rights reserved. 2025</p>
-    </footer>
-</body>
-</html>
+
+    <div class="add-user-form">
+        <h2 class="section-title form-title">Add New User</h2>
+        <form action="{{ url_for('create_user') }}" method="POST" class="form-layout">
+            <div class="form-group">
+                <input type="text" id="username" name="username" placeholder="Enter Username" required
+                       class="form-input">
+            </div>
+            <button type="submit" class="submit-button">
+                Add User
+            </button>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="message-box">
+                        {% for category, message in messages %}
+                            <p class="
+                                {% if category == 'success' %}message-success
+                                {% elif category == 'error' %}message-error
+                                {% else %}message-info
+                                {% endif %}
+                            ">{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </form>
+    </div>
+
+</div>
+{% endblock %}
