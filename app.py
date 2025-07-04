@@ -12,7 +12,7 @@ from data.data_models import db, User, Movie
 
 app = Flask(__name__)
 
-# TODO: IMPORTANT: Replace this with a strong, random key in production!
+# TODO: Replace this with a strong, random key in production!
 app.secret_key = 'a_very_secret_key'
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -31,6 +31,7 @@ def home():
     This serves as the main user list page.
     """
     users = data_manager.get_users()
+
     return render_template('index.html', users=users)
 
 
@@ -44,7 +45,7 @@ def create_user():
 
     if not username:
         flash('Username cannot be empty!', 'error')
-        return redirect(url_for('home')) # Changed to 'home' as it's the new index
+        return redirect(url_for('home'))
 
     try:
         data_manager.create_user(username)
@@ -56,7 +57,59 @@ def create_user():
     except Exception as e:
         flash(f"An unknown error occurred: {e}", 'error')
 
-    return redirect(url_for('home')) # Changed to 'home'
+    return redirect(url_for('home'))
+
+
+@app.route('/users/<int:user_id>/update', methods=['POST'])
+def update_user_details(user_id):
+    """
+    Handles updating a user's username.
+    """
+    user = data_manager.get_user_by_id(user_id)
+    if not user:
+        flash(f"User with ID {user_id} not found!", 'error')
+        return redirect(url_for('home'))
+
+    new_username = request.form.get('new_username')
+    if not new_username:
+        flash('New username cannot be empty!', 'error')
+        return redirect(url_for('home'))
+
+    try:
+        updated_user = data_manager.update_user(user_id, new_username)
+        if updated_user:
+            flash(f"User '{user.username}' updated to '{updated_user.username}' successfully!", 'success')
+        else:
+            flash(f"Could not update user with ID {user_id}.", 'error')
+    except ValueError as e:
+        flash(f"Error: {e}", 'error')
+    except RuntimeError as e:
+        flash(f"An error occurred while updating user: {e}", 'error')
+    except Exception as e:
+        flash(f"An unknown error occurred: {e}", 'error')
+
+    return redirect(url_for('home'))
+
+
+@app.route('/users/<int:user_id>/delete', methods=['POST'])
+def delete_user(user_id):
+    """
+    Handles deleting a specific user.
+    """
+    user = data_manager.get_user_by_id(user_id)
+    username = user.username
+    try:
+        success = data_manager.delete_user(user_id)
+        if success:
+            flash(f"User {username} deleted successfully!", 'success')
+        else:
+            flash(f"User with ID {user_id} not found or could not be deleted.", 'error')
+    except RuntimeError as e:
+        flash(f"An error occurred while deleting user: {e}", 'error')
+    except Exception as e:
+        flash(f"An unknown error occurred: {e}", 'error')
+
+    return redirect(url_for('home'))
 
 
 @app.route('/users/<int:user_id>/movies', methods=['GET', 'POST'])
@@ -70,20 +123,18 @@ def user_movies(user_id):
         return redirect(url_for('home'))
 
     if request.method == 'POST':
-        # Logic for adding a new movie
         movie_title = request.form.get('movie_title')
         if not movie_title:
             flash('Movie title cannot be empty!', 'error')
             return redirect(url_for('user_movies', user_id=user_id))
 
         try:
-            # data_manager.add_movie expects a title, not a full movie object, for OMDb lookup
             new_movie = data_manager.add_movie(user_id, movie_title)
             if new_movie:
                 flash(f"Movie '{new_movie.title}' added successfully for {user.username}!", 'success')
             else:
                 flash(f"Could not find movie '{movie_title}' on OMDb or failed to add.", 'error')
-        except ValueError as e: # Catching specific errors from data_manager
+        except ValueError as e:
             flash(f"Error: {e}", 'error')
         except RuntimeError as e:
             flash(f"An unexpected error occurred while adding movie: {e}", 'error')
@@ -91,7 +142,7 @@ def user_movies(user_id):
             flash(f"An unknown error occurred: {e}", 'error')
 
         return redirect(url_for('user_movies', user_id=user_id))
-    else: # GET request
+    else:
         movies = data_manager.get_movies(user_id)
         return render_template('user_movies.html', user=user, movies=movies)
 
@@ -101,7 +152,6 @@ def update_movie(user_id, movie_id):
     """
     Handles updating a specific movie for a user.
     """
-    # Ensure the user exists
     user = data_manager.get_user_by_id(user_id)
     if not user:
         flash(f"User with ID {user_id} not found!", 'error')
@@ -110,14 +160,12 @@ def update_movie(user_id, movie_id):
     # Get updated data from the form (e.g., new_title, new_note)
     new_title = request.form.get('new_title')
     new_note = request.form.get('new_note')
-    # You might want to fetch other fields like year, rating if they are editable
 
     update_kwargs = {}
     if new_title:
         update_kwargs['title'] = new_title
     if new_note:
         update_kwargs['note'] = new_note
-    # Add other fields to update_kwargs as needed
 
     if not update_kwargs:
         flash("No update data provided!", 'info')
@@ -142,16 +190,16 @@ def delete_movie(user_id, movie_id):
     """
     Handles deleting a specific movie for a user.
     """
-    # Ensure the user exists
     user = data_manager.get_user_by_id(user_id)
     if not user:
         flash(f"User with ID {user_id} not found!", 'error')
         return redirect(url_for('home'))
 
+    movie = data_manager.get_movie_by_id(movie_id)
     try:
         success = data_manager.delete_movie(movie_id)
         if success:
-            flash(f"Movie with ID {movie_id} deleted successfully!", 'success')
+            flash(f"Movie {movie.title} deleted successfully!", 'success')
         else:
             flash(f"Movie with ID {movie_id} not found or could not be deleted.", 'error')
     except RuntimeError as e:
@@ -166,4 +214,4 @@ if __name__ == '__main__':
   with app.app_context():
     db.create_all()
 
-  app.run(debug=True)
+  app.run(debug=True) # TODO: Replace this with False once in production!

@@ -19,9 +19,22 @@
                 {% if users %}
                     <ul class="user-list">
                         {% for user in users %}
-                            <li class="list-item">
-                                <span class="list-item-text">{{ user.username }} (ID: {{ user.id }})</span>
-                                <!-- Add buttons for update/delete later if needed -->
+                            <li class="list-item user-item-actions">
+                                <!-- Clickable link to user's movies -->
+                                <a href="{{ url_for('user_movies', user_id=user.id) }}" class="user-link">
+                                    <span class="list-item-text">Movies from {{ user.username }}</span>
+                                </a>
+                                <div class="user-actions">
+                                    <!-- Update User Form - now points to update_user_details -->
+                                    <form action="{{ url_for('update_user_details', user_id=user.id) }}" method="POST" class="inline-form">
+                                        <input type="text" name="new_username" placeholder="New Username" class="form-input-small" required>
+                                        <button type="submit" class="action-button update-button">Update</button>
+                                    </form>
+                                    <!-- Delete User Form -->
+                                    <form action="{{ url_for('delete_user', user_id=user.id) }}" method="POST" class="inline-form delete-form-margin">
+                                        <button type="submit" class="action-button delete-button">Delete</button>
+                                    </form>
+                                </div>
                             </li>
                         {% endfor %}
                     </ul>

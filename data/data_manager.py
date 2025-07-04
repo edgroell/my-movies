@@ -89,6 +89,11 @@ class DataManager:
 
 
     @staticmethod
+    def get_movie_by_id(movie_id):
+        """Fetches a movie by ID. Returns None if not found."""
+        return Movie.query.get(movie_id)
+
+    @staticmethod
     def get_movies(user_id):
         """Fetches all movies for a given user. Returns an empty list if none found."""
         return Movie.query.filter_by(user_id=user_id).all()
