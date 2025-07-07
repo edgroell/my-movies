@@ -3,7 +3,7 @@
 
 This app aims at collecting all your favorite movies (or all that you want really) and display this collection into a beautiful HTML frontend.
 
-![img.png](img.png)
+![img.png](static/images/img.png)
 
 ## Installation
 
