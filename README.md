@@ -3,6 +3,8 @@
 
 This app aims at collecting all your favorite movies (or all that you want really) and display this collection into a beautiful HTML frontend.
 
+![img.png](img.png)
+
 ## Installation
 
 To install this app, simply clone the repository and install the dependencies in requirements.txt using `pip`
