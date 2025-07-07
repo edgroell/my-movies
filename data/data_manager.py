@@ -2,30 +2,35 @@
 Module that serves as Data Access Layer
 """
 
+from sqlalchemy.exc import IntegrityError
+
 from services.omdb_service import OMDBService
 from .data_models import db, User, Movie
-from sqlalchemy.exc import IntegrityError
 
 omdb_service = OMDBService()
 
 class DataManager:
+    """ Handles all interactions with the database """
     @staticmethod
-    def get_users():
-        """Fetches all users. Returns an empty list if none found."""
+    def get_users() -> list:
+        """ Fetches all users. Returns an empty list if none found. """
+
         return User.query.all()
 
     @staticmethod
-    def get_user_by_id(user_id):
-        """Fetches a user by ID. Returns None if not found."""
+    def get_user_by_id(user_id) -> dict:
+        """ Fetches a user by ID. Returns None if not found. """
+
         return User.query.get(user_id)
 
     @staticmethod
-    def get_user_by_username(username):
-        """Fetches a user by username. Returns None if not found."""
+    def get_user_by_username(username) -> dict:
+        """ Fetches a user by username. Returns None if not found. """
+
         return User.query.filter_by(username=username).first()
 
     @staticmethod
-    def create_user(username):
+    def create_user(username) -> dict:
         """
         Creates a new user.
         Raises IntegrityError if username already exists (due to unique constraint).
@@ -35,7 +40,9 @@ class DataManager:
             new_user = User(username=username)
             db.session.add(new_user)
             db.session.commit()
+
             return new_user
+
         except IntegrityError:
             db.session.rollback()
             raise ValueError(
@@ -45,7 +52,7 @@ class DataManager:
             raise RuntimeError(
                 f"Failed to create user due to a database hiccup: {e}")
 
-    def update_user(self, user_id, new_username=None):
+    def update_user(self, user_id, new_username=None) -> dict | None:
         """
         Updates a user's attributes.
         Returns the updated User object, or None if user not found.
@@ -53,6 +60,7 @@ class DataManager:
         """
         user = self.get_user_by_id(user_id)
         if not user:
+
             return None
 
         if new_username is not None and new_username != user.username:
@@ -64,41 +72,48 @@ class DataManager:
 
         try:
             db.session.commit()
+
             return user
+
         except Exception as e:
             db.session.rollback()
             raise RuntimeError(f"Failed to update user {user_id}: {e}")
 
 
-    def delete_user(self, user_id):
+    def delete_user(self, user_id) -> bool:
         """
         Deletes a user by ID.
         Returns True on success, False if user not found.
         """
         user = self.get_user_by_id(user_id)
         if not user:
+
             return False
 
         try:
             db.session.delete(user)
             db.session.commit()
+
             return True
+
         except Exception as e:
             db.session.rollback()
             raise RuntimeError(f"Failed to delete user {user_id}: {e}")
 
 
     @staticmethod
-    def get_movie_by_id(movie_id):
+    def get_movie_by_id(movie_id) -> dict:
         """Fetches a movie by ID. Returns None if not found."""
+
         return Movie.query.get(movie_id)
 
     @staticmethod
-    def get_movies(user_id):
+    def get_movies(user_id) -> list:
         """Fetches all movies for a given user. Returns an empty list if none found."""
+
         return Movie.query.filter_by(user_id=user_id).all()
 
-    def add_movie(self, user_id, movie):
+    def add_movie(self, user_id, movie) -> dict | None:
         """
         Adds a new movie by fetching all data from the OMDb API.
         Returns the new Movie object on success.
@@ -125,49 +140,58 @@ class DataManager:
                     note='N/A')
                 db.session.add(new_movie)
                 db.session.commit()
+
                 return new_movie
+
         except Exception as e:
             db.session.rollback()
             raise RuntimeError(f"Failed to add movie: {e}")
 
 
     @staticmethod
-    def update_movie(movie_id, **kwargs):
+    def update_movie(movie_id, **kwargs) -> dict | None:
         """
         Updates a movie's attributes.
         Returns the updated Movie object, or None if movie not found.
         """
         movie = Movie.query.get(movie_id)
         if not movie:
+
             return None
 
         for key, value in kwargs.items():
             if hasattr(movie, key):
                 setattr(movie, key, value)
             else:
-                print(f"Warning: Attempted to update non-existent attribute '{key}' for Movie ID {movie_id}")
+                print(f"Warning: Attempted to update non-existent attribute '{key}' "
+                      f"for Movie ID {movie_id}")
 
         try:
             db.session.commit()
+
             return movie
+
         except Exception as e:
             db.session.rollback()
             raise RuntimeError(f"Failed to update movie {movie_id}: {e}")
 
     @staticmethod
-    def delete_movie(movie_id):
+    def delete_movie(movie_id) -> bool:
         """
         Deletes a movie by ID.
         Returns True on success, False if movie not found.
         """
         movie = Movie.query.get(movie_id)
         if not movie:
+
             return False
 
         try:
             db.session.delete(movie)
             db.session.commit()
+
             return True
+
         except Exception as e:
             db.session.rollback()
             raise RuntimeError(f"Failed to delete movie {movie_id}: {e}")

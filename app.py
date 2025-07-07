@@ -6,20 +6,19 @@ Latest: 04-JUL-2025
 
 import os
 
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, Response
 from data.data_manager import DataManager
-from data.data_models import db, User, Movie
+import data.data_models
 
 app = Flask(__name__)
 
-# TODO: Replace this with a strong, random key in production!
 app.secret_key = 'a_very_secret_key'
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data', 'my_movies.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db.init_app(app)
+data.data_models.db.init_app(app)
 
 data_manager = DataManager()
 
@@ -45,6 +44,7 @@ def create_user():
 
     if not username:
         flash('Username cannot be empty!', 'error')
+
         return redirect(url_for('home'))
 
     try:
@@ -69,17 +69,20 @@ def update_user_details(user_id):
     username = user.username
     if not user:
         flash(f"User with ID {user_id} not found!", 'error')
+
         return redirect(url_for('home'))
 
     new_username = request.form.get('new_username')
     if not new_username:
         flash('New username cannot be empty!', 'error')
+
         return redirect(url_for('home'))
 
     try:
         updated_user = data_manager.update_user(user_id, new_username)
         if updated_user:
-            flash(f"User '{username}' updated to '{updated_user.username}' successfully!", 'success')
+            flash(f"User '{username}' updated to "
+                  f"'{updated_user.username}' successfully!", 'success')
         else:
             flash(f"Could not update user with ID {user_id}.", 'error')
     except ValueError as e:
@@ -121,18 +124,21 @@ def user_movies(user_id):
     user = data_manager.get_user_by_id(user_id)
     if not user:
         flash(f"User with ID {user_id} not found!", 'error')
+
         return redirect(url_for('home'))
 
     if request.method == 'POST':
         movie_title = request.form.get('movie_title')
         if not movie_title:
             flash('Movie title cannot be empty!', 'error')
+
             return redirect(url_for('user_movies', user_id=user_id))
 
         try:
             new_movie = data_manager.add_movie(user_id, movie_title)
             if new_movie:
-                flash(f"Movie '{new_movie.title}' added successfully for {user.username}!", 'success')
+                flash(f"Movie '{new_movie.title}' added successfully "
+                      f"for {user.username}!", 'success')
             else:
                 flash(f"Could not find movie '{movie_title}' on OMDb or failed to add.", 'error')
         except ValueError as e:
@@ -143,9 +149,10 @@ def user_movies(user_id):
             flash(f"An unknown error occurred: {e}", 'error')
 
         return redirect(url_for('user_movies', user_id=user_id))
-    else:
-        movies = data_manager.get_movies(user_id)
-        return render_template('user_movies.html', user=user, movies=movies)
+
+    movies = data_manager.get_movies(user_id)
+
+    return render_template('user_movies.html', user=user, movies=movies)
 
 
 @app.route('/users/<int:user_id>/movies/<int:movie_id>/update', methods=['POST'])
@@ -156,9 +163,9 @@ def update_movie(user_id, movie_id):
     user = data_manager.get_user_by_id(user_id)
     if not user:
         flash(f"User with ID {user_id} not found!", 'error')
+
         return redirect(url_for('home'))
 
-    # Get updated data from the form (e.g., new_title, new_note)
     new_title = request.form.get('new_title')
     new_note = request.form.get('new_note')
 
@@ -170,6 +177,7 @@ def update_movie(user_id, movie_id):
 
     if not update_kwargs:
         flash("No update data provided!", 'info')
+
         return redirect(url_for('user_movies', user_id=user_id))
 
     try:
@@ -194,6 +202,7 @@ def delete_movie(user_id, movie_id):
     user = data_manager.get_user_by_id(user_id)
     if not user:
         flash(f"User with ID {user_id} not found!", 'error')
+
         return redirect(url_for('home'))
 
     movie = data_manager.get_movie_by_id(movie_id)
@@ -217,30 +226,29 @@ def delete_movie(user_id, movie_id):
 
 
 @app.errorhandler(404)
-def page_not_found(e):
+def page_not_found(e) -> Response:
     """
     Handles 404 errors (Page Not Found).
     Renders a custom 404 page and returns the 404 status code.
     The 'e' parameter is the error object, which is required by Flask.
     """
-    # Note: We are explicitly returning the 404 status code.
+
     return render_template('404.html'), 404
 
 @app.errorhandler(500)
-def internal_server_error(e):
+def internal_server_error(e) -> Response:
     """
     Handles 500 errors (Internal Server Error).
     This is triggered by unhandled exceptions in your code.
     Renders a custom 500 page and returns the 500 status code.
     """
-    # It's a good practice to also log the actual error to your console or a file
-    # for debugging purposes.
     print(f"An internal server error occurred: {e}")
+
     return render_template('500.html'), 500
 
 
 if __name__ == '__main__':
-  with app.app_context():
-    db.create_all()
+    with app.app_context():
+        data.data_models.db.create_all()
 
-  app.run(debug=True) # TODO: Replace this with False once in production!
+    app.run(debug=True)

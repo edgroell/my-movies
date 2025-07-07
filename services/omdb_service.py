@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class OMDBService:
+    """ Handles all interactions with OMDb API """
     def __init__(self, api_key=None):
         self.api_key = api_key or os.getenv("OMDB_API_KEY")
         if not self.api_key:
@@ -24,9 +25,11 @@ class OMDBService:
         else:
             raise ValueError("Must provide a title to fetch movie details.")
 
-        response = requests.get(self.base_url, params=params)
+        response = requests.get(self.base_url, params=params, timeout=10)
         response.raise_for_status()
         movie_data = response.json()
         if movie_data.get("Response") == "True":
+
             return movie_data
+
         return None
