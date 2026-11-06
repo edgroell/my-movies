@@ -66,11 +66,12 @@ def update_user_details(user_id):
     Handles updating a user's username.
     """
     user = data_manager.get_user_by_id(user_id)
-    username = user.username
     if not user:
         flash(f"User with ID {user_id} not found!", 'error')
 
         return redirect(url_for('home'))
+
+    username = user['username']
 
     new_username = request.form.get('new_username')
     if not new_username:
@@ -82,7 +83,7 @@ def update_user_details(user_id):
         updated_user = data_manager.update_user(user_id, new_username)
         if updated_user:
             flash(f"User '{username}' updated to "
-                  f"'{updated_user.username}' successfully!", 'success')
+                f"'{updated_user['username']}' successfully!", 'success')
         else:
             flash(f"Could not update user with ID {user_id}.", 'error')
     except ValueError as e:
@@ -101,7 +102,7 @@ def delete_user(user_id):
     Handles deleting a specific user.
     """
     user = data_manager.get_user_by_id(user_id)
-    username = user.username
+    username = user['username']
     try:
         success = data_manager.delete_user(user_id)
         if success:
@@ -137,8 +138,8 @@ def user_movies(user_id):
         try:
             new_movie = data_manager.add_movie(user_id, movie_title)
             if new_movie:
-                flash(f"Movie '{new_movie.title}' added successfully "
-                      f"for {user.username}!", 'success')
+                flash(f"Movie '{new_movie['title']}' added successfully "
+                      f"for {user['username']}!", 'success')
             else:
                 flash(f"Could not find movie '{movie_title}' on OMDb or failed to add.", 'error')
         except ValueError as e:
@@ -183,7 +184,7 @@ def update_movie(user_id, movie_id):
     try:
         updated_movie = data_manager.update_movie(movie_id, **update_kwargs)
         if updated_movie:
-            flash(f"Movie '{updated_movie.title}' updated successfully!", 'success')
+            flash(f"Movie '{updated_movie['title']}' updated successfully!", 'success')
         else:
             flash(f"Movie with ID {movie_id} not found or could not be updated.", 'error')
     except RuntimeError as e:
@@ -209,7 +210,7 @@ def delete_movie(user_id, movie_id):
     try:
         success = data_manager.delete_movie(movie_id)
         if success:
-            flash(f"Movie {movie.title} deleted successfully!", 'success')
+            flash(f"Movie {movie['title']} deleted successfully!", 'success')
         else:
             flash(f"Movie with ID {movie_id} not found or could not be deleted.", 'error')
     except RuntimeError as e:
@@ -226,7 +227,7 @@ def delete_movie(user_id, movie_id):
 
 
 @app.errorhandler(404)
-def page_not_found(e) -> Response:
+def page_not_found(e) -> tuple[str, int]:
     """
     Handles 404 errors (Page Not Found).
     Renders a custom 404 page and returns the 404 status code.
@@ -236,7 +237,7 @@ def page_not_found(e) -> Response:
     return render_template('404.html'), 404
 
 @app.errorhandler(500)
-def internal_server_error(e) -> Response:
+def internal_server_error(e) -> tuple[str, int]:
     """
     Handles 500 errors (Internal Server Error).
     This is triggered by unhandled exceptions in your code.
